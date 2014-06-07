@@ -3,6 +3,7 @@ package mms;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +13,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.openal.SoundStore;
@@ -24,10 +29,21 @@ public class Main {
 	Player player;
 	Enemy enemy;
 	Laser laser;
-	
+	// TrueTypeFont font;
+
+	int backgroundY = 0;
+
 	private Audio audioEffect;
 
+	private static UnicodeFont font;
+	private static DecimalFormat formatter = new DecimalFormat("#.##");
+
+	private Background[] backgroundArray = new Background[2];
+	private Background thisBG;
+
 	List<Laser> laserShots = new LinkedList<Laser>();
+	List<Background> backgroundLoop = new LinkedList<Background>();
+	int x = 0;
 
 	public Main() {
 		try {
@@ -39,15 +55,22 @@ public class Main {
 		}
 
 		player = new Player(200, 300, 100, 100);
-		Background background = new Background(0, -500, 1800, 5000);
-		background.setDY(.05);
-
+		// Background background = new Background(0, -5000, 1800, 5000);
+		// Background background2 = new Background(0, -500, 1800, 5000);
+		// background.setDY(1); //0.05
+		// background2.setDY(.05);
+		// backgroundArray[0]=background;
+		// backgroundArray[1]=background2;
+		thisBG=new Background(0, -1000, 1800, 3000);
+		backgroundLoop.add(thisBG);
+		
 		enemy = new Enemy(10, 10, 50, 50);
 		enemy.setDY(0.03);
 		enemy.setDX(0.05);
-		
+
 		try {
-			audioEffect = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("res/laser_Shoot.wav"));
+			audioEffect = AudioLoader.getAudio("WAV",
+					ResourceLoader.getResourceAsStream("res/laser_Shoot.wav"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -56,6 +79,7 @@ public class Main {
 		// player.getY(), 10, 10);
 
 		setUpTimer();
+		setUpFonts();
 
 		// Initializing code OpenGL
 		glMatrixMode(GL_PROJECTION);
@@ -70,19 +94,44 @@ public class Main {
 			delta = getDelta();
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			// inputfunction
-
-			background.update(delta);
-			background.draw();
+			// background.update(delta);
+			// background.draw();
+			for (Background bg : backgroundLoop) {
+				bg.draw();
+				bg.update(delta);
+				bg.setDY(0.1);
+			}
 
 			player.draw();
 			player.update(delta);
 
+			fonts();
+
 			enemy.draw();
 			enemy.update(delta);
-			System.out.println(background.getY());
-			if (background.getY() > 0) {
-				background.setY(-500);
+			// System.out.println(background.getY());
+			// if (background.getY() > 100) {
+			// background.setY(-500);
+			// }
+
+			// if((int)background.getY()+1%500==0){
+			// System.out.println("jz");
+			// }
+			// if(background.getY()>background.getHeight()){
+			// System.out.println("test");
+			// }
+			backgroundY = (int) thisBG.getY();
+			 System.out.println(backgroundY);
+
+			if (backgroundY > x) {
+//				backgroundLoop.add(new Background(0, -1000, 1800, 3000));
+				thisBG=new Background(0, -2200, 1800, 3000);
+				backgroundLoop.add(thisBG);
+//				x += 1000;
+			}
+			// System.out.println(backgroundLoop.size());
+			if (backgroundLoop.size() > 2) {
+				backgroundLoop.remove(0);
 			}
 
 			// laserMovement(laser);
@@ -90,13 +139,11 @@ public class Main {
 			for (Laser laser : laserShots) {
 				laser.draw();
 				laser.update(delta);
-				laser.setDY(-0.1);
+				laser.setDY(-0.2);
 			}
 
-			// laser.draw();
-			// laser.update(delta);
-
 			input();
+			input2();
 
 			Display.update();
 			Display.sync(60);
@@ -106,11 +153,11 @@ public class Main {
 		System.exit(0);
 	}
 
-//	private void laserMovement(Laser laser) {
-//		laser.setX(player.getX());
-//		laser.setY(player.getY());
-//
-//	}
+	// private void laserMovement(Laser laser) {
+	// laser.setX(player.getX());
+	// laser.setY(player.getY());
+	//
+	// }
 
 	private void setUpTimer() {
 		lastFrame = getTime();
@@ -133,6 +180,7 @@ public class Main {
 		// if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			Display.destroy();
+			AL.destroy();
 			System.exit(0);
 		}
 
@@ -150,14 +198,43 @@ public class Main {
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
 			player.setX(player.getX() + 6);
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && Keyboard.next()) {
-			laserShots.add(new Laser(
-					player.getX() + player.getWidtH() / 2 - 23, player.getY(),
-					10, 20));
-			audioEffect.playAsSoundEffect(1f, 1f, false);
-		}
+		// if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && Keyboard.next()) {
+		// laserShots.add(new Laser(
+		// player.getX() + player.getWidtH() / 2 - 23, player.getY(),
+		// 10, 20));
+		// audioEffect.playAsSoundEffect(1f, 1f, false);
 		// }
-		SoundStore.get().poll(0);
+		// }
+		// SoundStore.get().poll(0);
+	}
+
+	private void input2() {
+		while (Keyboard.next()) {
+			if (Keyboard.getEventKey() == Keyboard.KEY_SPACE
+					&& Keyboard.getEventKeyState()) {
+				laserShots.add(new Laser(player.getX() + player.getWidtH() / 2
+						- 23, player.getY(), 10, 20));
+				audioEffect.playAsSoundEffect(1f, 1f, false);
+			}
+			SoundStore.get().poll(0);
+		}
+	}
+
+	private static void setUpFonts() {
+		java.awt.Font awtFont = new java.awt.Font("Comic Sans MS",
+				java.awt.Font.BOLD, 36);
+		font = new UnicodeFont(awtFont);
+		font.getEffects().add(new ColorEffect(java.awt.Color.YELLOW));
+		font.addAsciiGlyphs();
+		try {
+			font.loadGlyphs();
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void fonts() {
+		font.drawString(10, 10, "TEXT TEST");
 	}
 
 	public static void main(String[] args) {
