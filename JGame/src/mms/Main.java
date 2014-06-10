@@ -27,7 +27,7 @@ public class Main {
 	private long lastFrame;
 	private int delta;
 	Player player;
-	Enemy enemy;
+	// Enemy enemy;
 	Laser laser;
 	// TrueTypeFont font;
 
@@ -37,11 +37,14 @@ public class Main {
 
 	private static UnicodeFont font;
 	private static DecimalFormat formatter = new DecimalFormat("#.##");
+	private int highscore=0;
 
 	private Background[] backgroundArray = new Background[2];
 	private Background thisBG;
 
 	List<Laser> laserShots = new LinkedList<Laser>();
+	List<Enemy> enemies = new LinkedList<Enemy>();
+
 	List<Background> backgroundLoop = new LinkedList<Background>();
 	int x = 0;
 
@@ -61,12 +64,22 @@ public class Main {
 		// background2.setDY(.05);
 		// backgroundArray[0]=background;
 		// backgroundArray[1]=background2;
-		thisBG=new Background(0, -1000, 1800, 3000);
+		thisBG = new Background(0, -1000, 1800, 3000);
 		backgroundLoop.add(thisBG);
+
+		Enemy enemy1 = new Enemy(10, 10, 50, 50);
+		enemy1.setDY(0.03);
+		enemy1.setDX(0.05);
+		enemies.add(enemy1);
 		
-		enemy = new Enemy(10, 10, 50, 50);
-		enemy.setDY(0.03);
-		enemy.setDX(0.05);
+		Enemy enemy2 = new Enemy(800, 10, 50, 50);
+		enemy2.setDY(0.01);
+		enemies.add(enemy2);
+		
+		Enemy enemy3 = new Enemy(500, 100, 50, 50);
+		enemy3.setDY(0.03);
+		enemy3.setDX(-0.01);
+		enemies.add(enemy3);
 
 		try {
 			audioEffect = AudioLoader.getAudio("WAV",
@@ -107,8 +120,13 @@ public class Main {
 
 			fonts();
 
-			enemy.draw();
-			enemy.update(delta);
+			// enemy.draw();
+			// enemy.update(delta);
+			for (Enemy enemy : enemies) {
+				enemy.draw();
+				enemy.update(delta);
+			}
+
 			// System.out.println(background.getY());
 			// if (background.getY() > 100) {
 			// background.setY(-500);
@@ -121,13 +139,13 @@ public class Main {
 			// System.out.println("test");
 			// }
 			backgroundY = (int) thisBG.getY();
-			 System.out.println(backgroundY);
+			// System.out.println(backgroundY);
 
 			if (backgroundY > x) {
-//				backgroundLoop.add(new Background(0, -1000, 1800, 3000));
-				thisBG=new Background(0, -2200, 1800, 3000);
+				// backgroundLoop.add(new Background(0, -1000, 1800, 3000));
+				thisBG = new Background(0, -2200, 1800, 3000);
 				backgroundLoop.add(thisBG);
-//				x += 1000;
+				// x += 1000;
 			}
 			// System.out.println(backgroundLoop.size());
 			if (backgroundLoop.size() > 2) {
@@ -144,6 +162,8 @@ public class Main {
 
 			input();
 			input2();
+
+			checkColl();
 
 			Display.update();
 			Display.sync(60);
@@ -234,7 +254,20 @@ public class Main {
 	}
 
 	private void fonts() {
-		font.drawString(10, 10, "TEXT TEST");
+		font.drawString(10, 10, Integer.toString(highscore));
+	}
+
+	private void checkColl() {
+		for (Laser laser : laserShots) {
+			for (Enemy enemy : enemies) {
+				if (laser.intersects(enemy)) {
+					laserShots.remove(laser);
+					enemies.remove(enemy);
+					highscore+=10;
+					break;
+				}
+			}
+		}
 	}
 
 	public static void main(String[] args) {
