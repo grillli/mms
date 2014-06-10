@@ -167,7 +167,7 @@ public class Main {
 			}
 
 			for (Gimmick gimmick : gimmicks) {
-				gimmick.draw();
+				gimmick.draw2();
 				gimmick.update(delta);
 			}
 
