@@ -22,17 +22,24 @@ import org.newdawn.slick.opengl.TextureLoader;
 import entities.AbstractMoveableEntity;
 
 public class Gimmick extends AbstractMoveableEntity {
-	private Texture texture = null;
-	private Texture texture2 = null;
-	private int i = 0;
+	private Texture star1 = null;
+	private Texture star2 = null;
+	private Texture star3 = null;
+	private Texture star4 = null;
+	private int i;
 
 	public Gimmick(double x, double y, double width, double height) {
 		super(x, y, width, height);
+		i = 0;
 		try {
-			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(
-					new File("res/star.png")));
-			this.texture2 = TextureLoader.getTexture("PNG",
-					new FileInputStream(new File("res/raumschiff.png")));
+			this.star1 = TextureLoader.getTexture("PNG", new FileInputStream(
+					new File("res/star1.png")));
+			this.star2 = TextureLoader.getTexture("PNG", new FileInputStream(
+					new File("res/star2.png")));
+			this.star3 = TextureLoader.getTexture("PNG", new FileInputStream(
+					new File("res/star3.png")));
+			this.star4 = TextureLoader.getTexture("PNG", new FileInputStream(
+					new File("res/star4.png")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -42,7 +49,7 @@ public class Gimmick extends AbstractMoveableEntity {
 
 	@Override
 	public void draw() {
-		texture.bind();
+		star1.bind();
 		glLoadIdentity();
 		glTranslated(x, y, 0);
 		glBegin(GL_QUADS);
@@ -60,14 +67,20 @@ public class Gimmick extends AbstractMoveableEntity {
 	}
 
 	public void draw2() {
-		if (i < 10) {
-			texture2.bind();
+		if (i < 8) {
+			star1.bind();
 			System.out.println("1");
-		} else {
-			texture.bind();
+		} else if (i < 16) {
+			star2.bind();
 			System.out.println("2");
-			if(i==20){
-				i=0;
+		} else if (i < 24) {
+			star3.bind();
+			System.out.println("3");
+		} else {
+			star4.bind();
+			System.out.println("4");
+			if (i == 32) {
+				i = -1;
 			}
 		}
 		i++;
