@@ -26,9 +26,15 @@ public class Main {
 
 	private long lastFrame;
 	private int delta;
+	private double turbo = 6;
+	private int steps = 0;
+	private boolean gimColl = false;
+	private boolean explosionColl = false;
 	Player player;
+	Explosion explosion;
 	// Enemy enemy;
 	Laser laser;
+	EnemyLaser enemylaser;
 	// TrueTypeFont font;
 
 	int backgroundY = 0;
@@ -37,13 +43,15 @@ public class Main {
 
 	private static UnicodeFont font;
 	private static DecimalFormat formatter = new DecimalFormat("#.##");
-	private int highscore=0;
+	private int highscore = 0;
 
 	private Background[] backgroundArray = new Background[2];
 	private Background thisBG;
 
 	List<Laser> laserShots = new LinkedList<Laser>();
 	List<Enemy> enemies = new LinkedList<Enemy>();
+	List<Gimmick> gimmicks = new LinkedList<Gimmick>();
+	List<Obstacle> obstacles = new LinkedList<Obstacle>();
 
 	List<Background> backgroundLoop = new LinkedList<Background>();
 	int x = 0;
@@ -71,15 +79,39 @@ public class Main {
 		enemy1.setDY(0.03);
 		enemy1.setDX(0.05);
 		enemies.add(enemy1);
-		
+
 		Enemy enemy2 = new Enemy(800, 10, 50, 50);
 		enemy2.setDY(0.01);
 		enemies.add(enemy2);
-		
+
 		Enemy enemy3 = new Enemy(500, 100, 50, 50);
 		enemy3.setDY(0.03);
 		enemy3.setDX(-0.01);
 		enemies.add(enemy3);
+
+		Gimmick gim1 = new Gimmick(50, 10, 50, 50);
+		gim1.setDY(0.3);
+		gimmicks.add(gim1);
+
+		Gimmick gim2 = new Gimmick(210, 10, 50, 50);
+		gim2.setDY(0.09);
+		gimmicks.add(gim2);
+
+		Gimmick gim3 = new Gimmick(550, 10, 50, 50);
+		gim3.setDY(0.02);
+		gimmicks.add(gim3);
+
+		Gimmick gim4 = new Gimmick(750, 10, 50, 50);
+		gim4.setDY(0.04);
+		gimmicks.add(gim4);
+
+		Obstacle obst1 = new Obstacle(680, 10, 70, 70);
+		obst1.setDY(0.04);
+		obstacles.add(obst1);
+
+		Obstacle obst2 = new Obstacle(480, 10, 70, 70);
+		obst2.setDY(0.02);
+		obstacles.add(obst2);
 
 		try {
 			audioEffect = AudioLoader.getAudio("WAV",
@@ -115,8 +147,15 @@ public class Main {
 				bg.setDY(0.1);
 			}
 
-			player.draw();
-			player.update(delta);
+			if (!explosionColl) {
+				player.draw();
+				player.update(delta);
+
+			} else {
+				explosion = new Explosion(player.getX(), player.getY(), 100,
+						100);
+				explosion.draw();
+			}
 
 			fonts();
 
@@ -125,6 +164,16 @@ public class Main {
 			for (Enemy enemy : enemies) {
 				enemy.draw();
 				enemy.update(delta);
+			}
+
+			for (Gimmick gimmick : gimmicks) {
+				gimmick.draw();
+				gimmick.update(delta);
+			}
+
+			for (Obstacle obstacle : obstacles) {
+				obstacle.draw();
+				obstacle.update(delta);
 			}
 
 			// System.out.println(background.getY());
@@ -206,17 +255,55 @@ public class Main {
 
 		// if (Keyboard.getEventKey() == Keyboard.KEY_W
 		// && Keyboard.getEventKeyState()) {
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			player.setY(player.getY() - 6);
+		if (!explosionColl && Keyboard.isKeyDown(Keyboard.KEY_W)) {
+			if (gimColl) {
+				steps++;
+			}
+
+			if (gimColl && steps == 200) {
+				turbo = 6;
+				steps = 0;
+				gimColl = false;
+			}
+			player.setY(player.getY() - turbo);
+
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			player.setY(player.getY() + 6);
+		if (!explosionColl && Keyboard.isKeyDown(Keyboard.KEY_S)) {
+			if (gimColl) {
+				steps++;
+			}
+
+			if (gimColl && steps == 200) {
+				turbo = 6;
+				steps = 0;
+				gimColl = false;
+			}
+			player.setY(player.getY() + turbo);
+
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			player.setX(player.getX() - 6);
+		if (!explosionColl && Keyboard.isKeyDown(Keyboard.KEY_A)) {
+			if (gimColl) {
+				steps++;
+			}
+			if (gimColl && steps == 200) {
+				turbo = 6;
+				steps = 0;
+				gimColl = false;
+
+			}
+			player.setX(player.getX() - turbo);
+
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			player.setX(player.getX() + 6);
+		if (!explosionColl && Keyboard.isKeyDown(Keyboard.KEY_D)) {
+			if (gimColl) {
+				steps++;
+			}
+			if (gimColl && steps == 200) {
+				turbo = 6;
+				steps = 0;
+				gimColl = false;
+			}
+			player.setX(player.getX() + turbo);
 		}
 		// if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && Keyboard.next()) {
 		// laserShots.add(new Laser(
@@ -255,19 +342,47 @@ public class Main {
 
 	private void fonts() {
 		font.drawString(10, 10, Integer.toString(highscore));
-	}
+	} 
 
 	private void checkColl() {
-		for (Laser laser : laserShots) {
-			for (Enemy enemy : enemies) {
+		boolean collDetected=false;
+		outerLoop: for (Enemy enemy : enemies) {
+			for (Laser laser : laserShots) {
 				if (laser.intersects(enemy)) {
 					laserShots.remove(laser);
 					enemies.remove(enemy);
-					highscore+=10;
-					break;
+					highscore += 10;
+					collDetected=true;
+					break outerLoop;
 				}
 			}
 		}
+		if(collDetected){
+			checkColl();
+		}
+		//
+		// for(Enemy enemy : enemies){
+		// if(player.intersects(enemy)){
+		//
+		// }
+		// }
+
+		for (Gimmick gimmick : gimmicks) {
+			if (player.intersects(gimmick)) {
+				gimColl = true;
+				gimmicks.remove(gimmick);
+				turbo = 20;
+				break;
+			}
+		}
+
+		for (Obstacle obstacle : obstacles) {
+			if (player.intersects(obstacle)) {
+				obstacles.remove(obstacle);
+				explosionColl = true;
+			}
+		}
+
 	}
 
 	public static void main(String[] args) {
