@@ -29,8 +29,8 @@ public class Boss extends AbstractMoveableEntity {
 	public Boss(double x, double y, double width, double height) {
 		super(x, y, width, height);
 		try {
-			this.texture = TextureLoader.getTexture("JPG", new FileInputStream(
-					new File("res/boss.jpg")));
+			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(
+					new File("res/boss.png")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -60,17 +60,18 @@ public class Main {
 	private int steps = 0;
 	private boolean gimColl = false;
 	private boolean explosionColl = false;
-	Player player;
-	Explosion explosion;
+	private Player player;
+	private Explosion explosion;
 	// Enemy enemy;
-	Laser laser;
-	EnemyLaser enemylaser;
-	Boss boss;
+	private Laser laser;
+	private EnemyLaser enemylaser;
+	private Boss boss;
+	private boolean bossThere=false;
 	// TrueTypeFont font;
 
-	int backgroundY = 0;
+	private int backgroundY = 0;
 
-	int leftMidRight = 1;
+	private int leftMidRight = 1;
 
 	private Audio audioEffect;
 
@@ -81,15 +82,15 @@ public class Main {
 	private Background[] backgroundArray = new Background[2];
 	private Background thisBG;
 
-	List<Laser> laserShots = new LinkedList<Laser>();
-	List<Enemy> enemies = new LinkedList<Enemy>();
-	List<Gimmick> gimmicks = new LinkedList<Gimmick>();
-	List<Obstacle> obstacles = new LinkedList<Obstacle>();
+	private List<Laser> laserShots = new LinkedList<Laser>();
+	private List<Enemy> enemies = new LinkedList<Enemy>();
+	private List<Gimmick> gimmicks = new LinkedList<Gimmick>();
+	private List<Obstacle> obstacles = new LinkedList<Obstacle>();
 
-	List<HomingMissile> homingMissiles = new LinkedList<HomingMissile>();
+	private List<HomingMissile> homingMissiles = new LinkedList<HomingMissile>();
 
-	List<Background> backgroundLoop = new LinkedList<Background>();
-	int x = 0;
+	private List<Background> backgroundLoop = new LinkedList<Background>();
+	private int x = 0;
 
 	public Main() {
 		try {
@@ -155,7 +156,7 @@ public class Main {
 		homingMissiles.add(new HomingMissile(599, 100, 150, 150));
 		
 		boss = new Boss(200, -1000, 800, 800);
-		boss.setDY(0.1);
+		boss.setDY(0.05);
 
 		try {
 			audioEffect = AudioLoader.getAudio("WAV",
@@ -189,7 +190,19 @@ public class Main {
 			
 			//methode auslagern
 			if(boss.getY()>0){
+				if(!bossThere){
 				boss.setDY(0);
+				boss.setDX(-0.1);
+				bossThere=true;
+				}
+				System.out.println(boss.getX());
+				if(boss.getX()<0){
+					boss.setDX(0.1);
+				}
+				else if(boss.getX()>420){
+					boss.setDX(-0.1);
+				}
+//				boss.s
 			}
 			
 			for (Background bg : backgroundLoop) {
