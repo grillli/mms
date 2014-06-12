@@ -1,3 +1,33 @@
+
+//////////////////////////////////////////////////////////
+//
+//			boolean alive;
+//			if(!alive) GameOverScreen.draw (Klasse GameOverScreen)
+//			alle anderen inputs außer ESC deaktiviern + sounds;
+//
+//			abfragen if(player.getX<0||player.getX>bildschirmbreite und Y dann geht A bzw D tasten nimchtmehr 
+//			+ W und S für getY
+//
+//			laserabfrage, damit nicht unendlich laser geschossen werden, wenn laser.getY>bildschirmhöhe, dann lasershots.delete(laser)
+//
+//			Hautpmenü bzw. Startmenü fehlt auch noch
+//
+//			Highscore mach ich noch
+//
+//			und für des komplette level brauchen wir dann zb noch einen Time-Manager der nach einer bestimmten Zeit einen Gegner erstellt
+//
+//			wir können auch noch den speedBoost vom Stern auf den Hintergrund hinzufügen, dass es aussieht als ob man schneller fliegt
+/////////////////////////
+
+
+
+
+
+
+
+
+
+
 package mms;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -35,9 +65,12 @@ public class Main {
 	// Enemy enemy;
 	Laser laser;
 	EnemyLaser enemylaser;
+	Boss boss;
 	// TrueTypeFont font;
 
 	int backgroundY = 0;
+
+	int leftMidRight = 1;
 
 	private Audio audioEffect;
 
@@ -52,6 +85,8 @@ public class Main {
 	List<Enemy> enemies = new LinkedList<Enemy>();
 	List<Gimmick> gimmicks = new LinkedList<Gimmick>();
 	List<Obstacle> obstacles = new LinkedList<Obstacle>();
+
+	List<HomingMissile> homingMissiles = new LinkedList<HomingMissile>();
 
 	List<Background> backgroundLoop = new LinkedList<Background>();
 	int x = 0;
@@ -75,16 +110,18 @@ public class Main {
 		thisBG = new Background(0, -1000, 1800, 3000);
 		backgroundLoop.add(thisBG);
 
-		Enemy enemy1 = new Enemy(10, 10, 50, 50);
+		
+
+		Enemy enemy1 = new Enemy(10, 10, 50, 50, 0);
 		enemy1.setDY(0.03);
 		enemy1.setDX(0.05);
 		enemies.add(enemy1);
 
-		Enemy enemy2 = new Enemy(800, 10, 50, 50);
+		Enemy enemy2 = new Enemy(800, 10, 50, 50, 1);
 		enemy2.setDY(0.01);
 		enemies.add(enemy2);
 
-		Enemy enemy3 = new Enemy(500, 100, 50, 50);
+		Enemy enemy3 = new Enemy(500, 100, 50, 50, 2);
 		enemy3.setDY(0.03);
 		enemy3.setDX(-0.01);
 		enemies.add(enemy3);
@@ -112,6 +149,13 @@ public class Main {
 		Obstacle obst2 = new Obstacle(480, 10, 70, 70);
 		obst2.setDY(0.02);
 		obstacles.add(obst2);
+		
+		homingMissiles.add(new HomingMissile(100, 100, 150, 150));
+		homingMissiles.add(new HomingMissile(800, 100, 150, 150));
+		homingMissiles.add(new HomingMissile(599, 100, 150, 150));
+		
+		boss = new Boss(200, -1000, 800, 800);
+		boss.setDY(0.1);
 
 		try {
 			audioEffect = AudioLoader.getAudio("WAV",
@@ -141,26 +185,34 @@ public class Main {
 
 			// background.update(delta);
 			// background.draw();
+			
+			
+			//methode auslagern
+			if(boss.getY()>0){
+				boss.setDY(0);
+			}
+			
 			for (Background bg : backgroundLoop) {
 				bg.draw();
 				bg.update(delta);
 				bg.setDY(0.1);
 			}
 
-			if (!explosionColl) {
-				player.draw();
-				player.update(delta);
 
-			} else {
-				explosion = new Explosion(player.getX(), player.getY(), 100,
-						100);
-				explosion.draw();
-			}
 
 			fonts();
 
 			// enemy.draw();
 			// enemy.update(delta);
+
+			boss.draw();
+			boss.update(delta);
+			
+			for (HomingMissile hm : homingMissiles) {
+				hm.draw();
+				hm.update(delta);
+			}
+
 			for (Enemy enemy : enemies) {
 				enemy.draw();
 				enemy.update(delta);
@@ -174,6 +226,16 @@ public class Main {
 			for (Obstacle obstacle : obstacles) {
 				obstacle.draw();
 				obstacle.update(delta);
+			}
+			
+			if (!explosionColl) {
+				player.draw2(leftMidRight);
+				player.update(delta);
+
+			} else {
+				explosion = new Explosion(player.getX(), player.getY(), 100,
+						100);
+				explosion.draw();
 			}
 
 			// System.out.println(background.getY());
@@ -208,11 +270,16 @@ public class Main {
 				laser.update(delta);
 				laser.setDY(-0.2);
 			}
+			
 
+
+			leftMidRight = 1;
 			input();
 			input2();
 
 			checkColl();
+			
+			homing();
 
 			Display.update();
 			Display.sync(60);
@@ -292,6 +359,7 @@ public class Main {
 
 			}
 			player.setX(player.getX() - turbo);
+			leftMidRight = 0;
 
 		}
 		if (!explosionColl && Keyboard.isKeyDown(Keyboard.KEY_D)) {
@@ -304,6 +372,7 @@ public class Main {
 				gimColl = false;
 			}
 			player.setX(player.getX() + turbo);
+			leftMidRight = 2;
 		}
 		// if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && Keyboard.next()) {
 		// laserShots.add(new Laser(
@@ -317,7 +386,7 @@ public class Main {
 
 	private void input2() {
 		while (Keyboard.next()) {
-			if (Keyboard.getEventKey() == Keyboard.KEY_SPACE
+			if (!explosionColl && Keyboard.getEventKey() == Keyboard.KEY_SPACE
 					&& Keyboard.getEventKeyState()) {
 				laserShots.add(new Laser(player.getX() + player.getWidtH() / 2
 						- 23, player.getY(), 10, 20));
@@ -342,22 +411,22 @@ public class Main {
 
 	private void fonts() {
 		font.drawString(10, 10, Integer.toString(highscore));
-	} 
+	}
 
 	private void checkColl() {
-		boolean collDetected=false;
+		boolean collDetected = false;
 		outerLoop: for (Enemy enemy : enemies) {
 			for (Laser laser : laserShots) {
 				if (laser.intersects(enemy)) {
 					laserShots.remove(laser);
 					enemies.remove(enemy);
 					highscore += 10;
-					collDetected=true;
+					collDetected = true;
 					break outerLoop;
 				}
 			}
 		}
-		if(collDetected){
+		if (collDetected) {
 			checkColl();
 		}
 		//
@@ -371,7 +440,7 @@ public class Main {
 			if (player.intersects(gimmick)) {
 				gimColl = true;
 				gimmicks.remove(gimmick);
-				turbo = 20;
+				turbo = 10;
 				break;
 			}
 		}
@@ -383,6 +452,37 @@ public class Main {
 			}
 		}
 
+	}
+
+	public void homing() {
+		int threshold=1;
+		for (HomingMissile homingM : homingMissiles) {
+//			System.out.println(player.getX()-homingM.getX());
+			if(homingM.getX()>player.getX()+threshold){
+//				System.out.println("test");
+				homingM.setDX(-0.1);
+			}
+			else if(homingM.getX()<player.getX()-threshold){
+//				System.out.println("test");
+				homingM.setDX(+0.1);
+			}
+			else{
+				homingM.setDX(0);
+			}
+			if(homingM.getY()>player.getY()+threshold){
+//				System.out.println("test");
+				homingM.setDY(-0.1);
+			}
+			else if(homingM.getY()<player.getY()-threshold){
+//				System.out.println("test");
+				homingM.setDY(+0.1);
+			}
+			else{
+				homingM.setDY(0);
+			}
+//			homingM.setX(player.getX() - homingM.getX());
+//			homingM.setY(player.getY() - homingM.getY());
+		}
 	}
 
 	public static void main(String[] args) {

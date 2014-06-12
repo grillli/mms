@@ -20,13 +20,23 @@ import entities.AbstractMoveableEntity;
 
 public class Player extends AbstractMoveableEntity {
 
-	private Texture texture = null;
+//	private Texture texture = null;
+	
+	private Texture left = null;
+	private Texture mid = null;
+	private Texture right = null;
 
 	public Player(double x, double y, double width, double height) {
 		super(x, y, width, height);
 		try {
-			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(
-					new File("res/raumschiff.png")));
+		//	this.texture = TextureLoader.getTexture("PNG", new FileInputStream(
+			//		new File("res/raumschiff.png")));
+			this.left = TextureLoader.getTexture("JPG", new FileInputStream(
+					new File("res/left.jpg")));
+			this.mid = TextureLoader.getTexture("JPG", new FileInputStream(
+					new File("res/mid.jpg")));
+			this.right = TextureLoader.getTexture("JPG", new FileInputStream(
+					new File("res/right.jpg")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -36,7 +46,7 @@ public class Player extends AbstractMoveableEntity {
 
 	@Override
 	public void draw() {
-		texture.bind();
+		mid.bind();
 		glLoadIdentity();
 		glTranslated(x, y, 0);
 		glBegin(GL_QUADS);
@@ -58,6 +68,33 @@ public class Player extends AbstractMoveableEntity {
 		// glVertex2d(x + width, y + height);
 		// glVertex2d(x, y + height);
 		// glEnd();
+	}
+	
+	public void draw2(int i) {
+		switch(i){
+		case 0:
+			left.bind();
+			break;
+		case 1:
+			mid.bind();
+			break;
+		case 2:
+			right.bind();
+			break;
+		}
+		glLoadIdentity();
+		glTranslated(x, y, 0);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0, 0);
+		glVertex2f(0, 0);
+		glTexCoord2f(1, 0);
+		glVertex2f((float) this.width, 0);
+		glTexCoord2f(1, 1);
+		glVertex2f((float) this.width, (float) this.height);
+		glTexCoord2f(0, 1);
+		glVertex2f(0, (float) this.height);
+		glEnd();
+		glLoadIdentity();
 	}
 
 }

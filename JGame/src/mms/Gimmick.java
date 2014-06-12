@@ -69,16 +69,12 @@ public class Gimmick extends AbstractMoveableEntity {
 	public void draw2() {
 		if (i < 8) {
 			star1.bind();
-			System.out.println("1");
 		} else if (i < 16) {
 			star2.bind();
-			System.out.println("2");
 		} else if (i < 24) {
 			star3.bind();
-			System.out.println("3");
 		} else {
 			star4.bind();
-			System.out.println("4");
 			if (i == 32) {
 				i = -1;
 			}
