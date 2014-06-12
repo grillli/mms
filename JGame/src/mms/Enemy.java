@@ -29,16 +29,16 @@ public class Enemy extends AbstractMoveableEntity {
 		try {
 			switch (textureID) {
 			case 0:
-				this.texture = TextureLoader.getTexture("JPG",
-						new FileInputStream(new File("res/enemy.jpg")));
+				this.texture = TextureLoader.getTexture("PNG",
+						new FileInputStream(new File("res/enemy.png")));
 				break;
 			case 1:
-				this.texture = TextureLoader.getTexture("JPG",
-						new FileInputStream(new File("res/enemy1.jpg")));
+				this.texture = TextureLoader.getTexture("PNG",
+						new FileInputStream(new File("res/enemy1.png")));
 				break;
 			case 2:
-				this.texture = TextureLoader.getTexture("JPG",
-						new FileInputStream(new File("res/enemy2.jpg")));
+				this.texture = TextureLoader.getTexture("PNG",
+						new FileInputStream(new File("res/enemy2.png")));
 				break;
 			}
 

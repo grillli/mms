@@ -28,8 +28,8 @@ public class EnemyLaser extends AbstractMoveableEntity{
 	public EnemyLaser(double x, double y, double width, double height) {
 		super(x, y, width, height);
 		try{
-			this.texture = TextureLoader.getTexture("JPG", new FileInputStream(
-					new File("res/laser.jpg")));
+			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(
+					new File("res/laser.png")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

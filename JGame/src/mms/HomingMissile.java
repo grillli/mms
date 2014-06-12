@@ -28,8 +28,8 @@ public class HomingMissile extends AbstractMoveableEntity{
 	public HomingMissile(double x, double y, double width, double height) {
 		super(x, y, width, height);
 		try{
-			this.texture = TextureLoader.getTexture("JPG", new FileInputStream(
-					new File("res/homingMissile.jpg")));
+			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(
+					new File("res/homingMissile.png")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

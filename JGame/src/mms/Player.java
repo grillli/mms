@@ -31,12 +31,12 @@ public class Player extends AbstractMoveableEntity {
 		try {
 		//	this.texture = TextureLoader.getTexture("PNG", new FileInputStream(
 			//		new File("res/raumschiff.png")));
-			this.left = TextureLoader.getTexture("JPG", new FileInputStream(
-					new File("res/left.jpg")));
-			this.mid = TextureLoader.getTexture("JPG", new FileInputStream(
-					new File("res/mid.jpg")));
-			this.right = TextureLoader.getTexture("JPG", new FileInputStream(
-					new File("res/right.jpg")));
+			this.left = TextureLoader.getTexture("PNG", new FileInputStream(
+					new File("res/left.png")));
+			this.mid = TextureLoader.getTexture("PNG", new FileInputStream(
+					new File("res/raumschiff.png")));
+			this.right = TextureLoader.getTexture("PNG", new FileInputStream(
+					new File("res/right.png")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
