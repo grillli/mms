@@ -40,6 +40,19 @@ public class Enemy extends AbstractMoveableEntity {
 				this.texture = TextureLoader.getTexture("PNG",
 						new FileInputStream(new File("res/enemy2.png")));
 				break;
+			case 3:
+				this.texture = TextureLoader.getTexture("PNG",
+						new FileInputStream(new File("res/enemy3.png")));
+				break;
+			case 4:
+				this.texture = TextureLoader.getTexture("PNG",
+						new FileInputStream(new File("res/enemy4.png")));
+				break;
+			case 5:
+				this.texture = TextureLoader.getTexture("PNG",
+						new FileInputStream(new File("res/enemy5.png")));
+				break;
+				
 			}
 
 		} catch (FileNotFoundException e) {
