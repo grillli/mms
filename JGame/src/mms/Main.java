@@ -22,6 +22,7 @@ package mms;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
@@ -73,11 +74,15 @@ public class Main {
 	private static UnicodeFont font;
 	private static UnicodeFont font2;
 	private static DecimalFormat formatter = new DecimalFormat("#.##");
-	private int highscore = 0;
+	private int actualScore = 0;
+	private Highscore highscore;
+	private int highscoreInt = 0;
 
-	private Background[] backgroundArray = new Background[2];
+//	private Background[] backgroundArray = new Background[2];
 	private Background thisBG;
-
+	private List<Background> backgroundLoop = new LinkedList<Background>();
+	private int x = 0;
+	
 	private List<Laser> laserShots = new LinkedList<Laser>();
 	private List<Enemy> enemies = new LinkedList<Enemy>();
 	private List<Gimmick> gimmicks = new LinkedList<Gimmick>();
@@ -85,8 +90,7 @@ public class Main {
 
 	private List<HomingMissile> homingMissiles = new LinkedList<HomingMissile>();
 
-	private List<Background> backgroundLoop = new LinkedList<Background>();
-	private int x = 0;
+
 
 	private boolean running = false;
 
@@ -188,6 +192,11 @@ public class Main {
 		setUpTimer();
 		setUpFonts();
 
+		// methode
+		highscore = new Highscore();
+		// highscore.load(new File("save.xml"));
+		highscoreInt = highscore.getHighscore();
+
 		// Initializing code OpenGL
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -225,6 +234,12 @@ public class Main {
 					// wenn man nur zb enemyWave und 5000 angibt wird es net
 					// wiederholt sondern nur einmal nach 5000millisek, also
 					// 5sek gestartet
+					
+//					try {
+//						Thread.sleep(2000);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
 				}
 			}
 
@@ -262,10 +277,8 @@ public class Main {
 				for (Background bg : backgroundLoop) {
 					bg.draw();
 					bg.update(delta);
-					bg.setDY(0.1);
+					bg.setDY(0.1+turbo/100-0.06);
 				}
-
-				fonts();
 
 				// enemy.draw();
 				// enemy.update(delta);
@@ -346,6 +359,8 @@ public class Main {
 
 				checkColl();
 
+				fonts();
+
 				homing();
 			}
 			Display.update();
@@ -400,9 +415,13 @@ public class Main {
 
 	private void input() {
 		// while (Keyboard.next()) {
-
+		if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
+			//das is GAME OVER nicht keyboard P
+			highscore.setHighscore(actualScore);
+		}
 		// if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			highscore.setHighscore(actualScore);
 			Display.destroy();
 			AL.destroy();
 			System.exit(0);
@@ -512,7 +531,8 @@ public class Main {
 	}
 
 	private void fonts() {
-		font.drawString(10, 10, Integer.toString(highscore));
+		font.drawString(10, 10, Integer.toString(actualScore));
+		font.drawString(750, 10, "Highscore: " + Integer.toString(highscoreInt));
 	}
 
 	private void drawMenuScreen() {
@@ -529,7 +549,7 @@ public class Main {
 				if (laser.intersects(enemy)) {
 					laserShots.remove(laser);
 					enemies.remove(enemy);
-					highscore += 10;
+					actualScore += 10;
 					collDetected = true;
 					break outerLoop;
 				}
