@@ -158,4 +158,62 @@ public class Explosion extends AbstractMoveableEntity {
 		glLoadIdentity();
 
 	}
+	
+	public void draw3() {
+		
+
+		if (i < 10) {
+			expl1.bind();
+		} else if (i < 20) {
+			expl2.bind();
+		} else if (i < 30) {
+			expl3.bind();
+		} else if (i < 40) {
+			expl4.bind();
+		} else if (i < 50) {
+			expl5.bind();
+		} else if (i <60) {
+			expl6.bind();
+		} else if (i < 70) {
+			expl7.bind();
+		} else if(i < 80){
+			expl8.bind();
+				
+		}else if (i < 90){
+			expl9.bind();
+		}else if(i < 100){
+			expl10.bind();
+		}else if(i < 110){
+			expl11.bind();
+		}else if(i< 120){
+			expl12.bind();
+		}else if (i < 130){
+			expl13.bind();
+		}else{
+			expl14.bind(); 
+			check = false; 
+
+		}
+		
+	
+	if(check){
+		i++;
+
+	}
+	glLoadIdentity();
+	glTranslated(x, y, 0);
+	glBegin(GL_QUADS);
+	// glBegin(G_)
+	glTexCoord2f(0, 0);
+	glVertex2f(0, 0);
+	glTexCoord2f(1, 0);
+	glVertex2f((float) width, 0);
+	glTexCoord2f(1, 1);
+	glVertex2f((float) width, (float) height);
+	glTexCoord2f(0, 1);
+	glVertex2f(0, (float) height);
+	glEnd();
+	glLoadIdentity();
+
+}
 }

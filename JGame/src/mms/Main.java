@@ -334,7 +334,7 @@ public class Main {
 					enemyWave1Boolean = false;
 				}
 				if (enemyWave2Boolean) {
-					int xE = 50, yE = 0;
+					int xE = 150, yE = 0;
 					int offset = 100;
 					for (int i = 0; i < 5; i++) {
 						if (!explosionColl) {
@@ -350,7 +350,11 @@ public class Main {
 					int offset = 0;
 					for (int i = 0; i < 5; i++) {
 						if (!explosionColl) {
-							enemies.add(new Enemy(xE, yE + offset, 80, 80, 3));
+							Enemy temp = new Enemy(xE, yE + offset, 80, 80, 4);
+							if (i == 1 || i == 3) {
+								temp.setDY(0.1);
+							}
+							enemies.add(temp);
 							if (i % 2 == 0) {
 								offset -= 100;
 							} else {
@@ -367,7 +371,6 @@ public class Main {
 					for (int i = 0; i < 5; i++) {
 						if (!explosionColl) {
 							enemies.add(new Enemy(xE, yE + offset, 80, 80, 4));
-
 							if (i <= 2) {
 								offset -= 30;
 							} else {
@@ -384,8 +387,6 @@ public class Main {
 					for (int i = 0; i < 5; i++) {
 						if (!explosionColl) {
 							Enemy temp = new Enemy(xE, yE + offset, 80, 80, 4);
-							// enemies.add(new Enemy(xE, yE + offset, 80, 80,
-							// 4));
 							if (i == 0 || i == 4) {
 								temp.setDY(0.2);
 							}
