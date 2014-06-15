@@ -3,15 +3,6 @@ package mms;
 
 import static org.lwjgl.opengl.GL11.*;
 
-
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glVertex2d;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,6 +12,7 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import entities.AbstractMoveableEntity;
+import entities.Entity;
 	
 public class EnemyLaser extends AbstractMoveableEntity{
 	private Texture texture = null; 
@@ -36,6 +28,14 @@ public class EnemyLaser extends AbstractMoveableEntity{
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public boolean intersects(Entity other) {
+		hitbox.setBounds((int)x, (int)y , (int) width, (int) height);
+		return hitbox.intersects(other.getX(), other.getY(), (x > other.getWidtH()) ? other.getWidtH() - other.getWidtH()/2 : other.getWidtH(),
+				other.getHeight());
+	}
+	
 	@Override
 	public void draw() {
 		texture.bind();
