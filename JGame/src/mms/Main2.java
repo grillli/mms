@@ -232,22 +232,18 @@ public class Main2 {
 			// background.draw();
 
 			if (!running) {
+				if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+					Display.destroy();
+					AL.destroy();
+					System.exit(0);
+				}
 				if (!playerAlive) {
 					// System.out.println("game over");
 					drawGameOverScreen();
-					while (Keyboard.next()) {
-						Display.destroy();
-						AL.destroy();
-						System.exit(0);
-					}
 
 				} else {
 					drawMenuScreen();
-					if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-						Display.destroy();
-						AL.destroy();
-						System.exit(0);
-					}
+
 					if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
 						running = true;
 						TimerTask enemyWave = new TimerTask() {
@@ -515,11 +511,11 @@ public class Main2 {
 
 	private void input() {
 		// while (Keyboard.next()) {
-		if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
-			// das is GAME OVER nicht keyboard P
-			highscore.setHighscore(actualScore);
-
-		}
+		// if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
+		// // das is GAME OVER nicht keyboard P
+		// highscore.setHighscore(actualScore);
+		//
+		// }
 		// if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			highscore.setHighscore(actualScore);
@@ -613,6 +609,10 @@ public class Main2 {
 						- 23, player.getY(), 10, 20));
 				audioEffect.playAsSoundEffect(1f, 1f, false);
 			}
+			if (!explosionColl && Keyboard.getEventKey() == Keyboard.KEY_P
+					&& Keyboard.getEventKeyState()) {
+				liveCounter++;
+			}
 			SoundStore.get().poll(0);
 		}
 
@@ -664,6 +664,7 @@ public class Main2 {
 	}
 
 	private void drawGameOverScreen() {
+		highscore.setHighscore(actualScore);
 		fontGameOver.drawString(PREF_DISPLAY_WIDTH / 6,
 				PREF_DISPLAY_HEIGHT / 2 - 100, "GAME OVER");
 		fontGameOver.drawString(PREF_DISPLAY_WIDTH / 6,
