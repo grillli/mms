@@ -21,14 +21,14 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import entities.AbstractMoveableEntity;
 	
-public class Laser extends AbstractMoveableEntity{
+public class Live extends AbstractMoveableEntity{
 	private Texture texture = null; 
 	
-	public Laser(double x, double y, double width, double height) {
+	public Live(double x, double y, double width, double height) {
 		super(x, y, width, height);
 		try{
 			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(
-					new File("res/laser.png")));
+					new File("res/live.png")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

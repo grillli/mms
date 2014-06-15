@@ -29,7 +29,7 @@ public class EnemyLaser extends AbstractMoveableEntity{
 		super(x, y, width, height);
 		try{
 			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(
-					new File("res/laser.png")));
+					new File("res/laser2.png")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -40,6 +40,7 @@ public class EnemyLaser extends AbstractMoveableEntity{
 	public void draw() {
 		texture.bind();
 		glLoadIdentity();
+//		glRotatef(90, 0, 1, 0);
 		glTranslated(x, y, 0);
 		glBegin(GL_QUADS);
 //		glBegin(G_)
