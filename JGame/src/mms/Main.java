@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -108,7 +109,13 @@ public class Main {
 
 	private boolean running = false;
 	private boolean enemyLaserBoolean = false;
-	private boolean enemyWaveBoolean = false;
+	private boolean enemyWave1Boolean = false;
+	private boolean enemyWave2Boolean = false;
+	private boolean enemyWave3Boolean = false;
+	private boolean enemyWave4Boolean = false;
+	private boolean enemyWave5Boolean = false;
+
+	private boolean shotsFiredBoolean = false;
 
 	private boolean playerAlive = true;
 	private Live liveImage;
@@ -211,6 +218,7 @@ public class Main {
 		setUpTimer();
 		setUpFonts();
 		setUpSounds();
+		Random rng = new Random();
 
 		backGroundMusic.playAsMusic(1f, 1f, false);
 		// backGroundMusic.
@@ -258,13 +266,44 @@ public class Main {
 
 					if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
 						running = true;
-						TimerTask enemyWave = new TimerTask() {
+						TimerTask enemyWave1 = new TimerTask() {
 							public void run() {
-								enemyWaveBoolean = true;
+								enemyWave1Boolean = true;
 							}
 						};
+						TimerTask enemyWave2 = new TimerTask() {
+							public void run() {
+								enemyWave2Boolean = true;
+							}
+						};
+						TimerTask enemyWave3 = new TimerTask() {
+							public void run() {
+								enemyWave3Boolean = true;
+							}
+						};
+						TimerTask enemyWave4 = new TimerTask() {
+							public void run() {
+								enemyWave4Boolean = true;
+							}
+						};
+						TimerTask enemyWave5 = new TimerTask() {
+							public void run() {
+								enemyWave5Boolean = true;
+							}
+						};
+						TimerTask shotsFiredWave = new TimerTask() {
+							public void run() {
+								shotsFiredBoolean = true;
+							}
+						};
+
 						Timer TimerEnemyWaves = new Timer();
-						TimerEnemyWaves.schedule(enemyWave, 5000, 5000);
+						TimerEnemyWaves.schedule(enemyWave1, 5000, 50000);
+						TimerEnemyWaves.schedule(enemyWave2, 15000, 50000);
+						TimerEnemyWaves.schedule(enemyWave3, 25000, 50000);
+						TimerEnemyWaves.schedule(enemyWave4, 35000, 50000);
+						TimerEnemyWaves.schedule(enemyWave5, 45000, 50000);
+						TimerEnemyWaves.schedule(shotsFiredWave, 6000, 4000);
 						// 2ter parameter is wann des startet, 3ter is wann des
 						// wiederholt wird
 						// wenn man nur zb enemyWave und 5000 angibt wird es net
@@ -282,22 +321,97 @@ public class Main {
 
 			if (running) {
 
-				if (enemyWaveBoolean) {
+				if (enemyWave1Boolean) {
 					int xE = 50, yE = 0;
+					int offset = 0;
 					for (int i = 0; i < 5; i++) {
 						if (!explosionColl) {
-							enemies.add(new Enemy(xE, yE, 80, 80, 3));
+							enemies.add(new Enemy(xE, yE + offset, 80, 80, 1));
+							offset += 20;
+							xE += 200;
+						}
+					}
+					enemyWave1Boolean = false;
+				}
+				if (enemyWave2Boolean) {
+					int xE = 50, yE = 0;
+					int offset = 100;
+					for (int i = 0; i < 5; i++) {
+						if (!explosionColl) {
+							enemies.add(new Enemy(xE, yE - offset, 80, 80, 2));
+							offset += 20;
+							xE += 200;
+						}
+					}
+					enemyWave2Boolean = false;
+				}
+				if (enemyWave3Boolean) {
+					int xE = 80, yE = 0;
+					int offset = 0;
+					for (int i = 0; i < 5; i++) {
+						if (!explosionColl) {
+							enemies.add(new Enemy(xE, yE + offset, 80, 80, 3));
+							if (i % 2 == 0) {
+								offset -= 100;
+							} else {
+								offset += 100;
+							}
+							xE += 180;
+						}
+					}
+					enemyWave3Boolean = false;
+				}
+				if (enemyWave4Boolean) {
+					int xE = 70, yE = 0;
+					int offset = 0;
+					for (int i = 0; i < 5; i++) {
+						if (!explosionColl) {
+							enemies.add(new Enemy(xE, yE + offset, 80, 80, 4));
+
+							if (i <= 2) {
+								offset -= 30;
+							} else {
+								offset += 30;
+							}
+							xE += 170;
+						}
+					}
+					enemyWave4Boolean = false;
+				}
+				if (enemyWave5Boolean) {
+					int xE = 50, yE = 0;
+					int offset = 0;
+					for (int i = 0; i < 5; i++) {
+						if (!explosionColl) {
+							Enemy temp = new Enemy(xE, yE + offset, 80, 80, 4);
+							// enemies.add(new Enemy(xE, yE + offset, 80, 80,
+							// 4));
+							if (i == 0 || i == 4) {
+								temp.setDY(0.2);
+							}
+							if (i == 1 || i == 3) {
+								temp.setDY(0.1);
+							}
+							enemies.add(temp);
 
 							xE += 200;
 						}
 					}
-
+					enemyWave5Boolean = false;
+				}
+				if (shotsFiredBoolean) {
 					for (Enemy enemy : enemies) {
-						enemyLaserShots.add(new EnemyLaser(enemy.getX()
+						EnemyLaser temp = new EnemyLaser(enemy.getX()
 								+ enemy.getWidtH() / 2 - 11, enemy.getY(), 30,
-								40));
+								40);
+						temp.setDY(rng.nextDouble() / 2 + 0.08);
+						// enemyLaserShots.add(new EnemyLaser(enemy.getX()
+						// + enemy.getWidtH() / 2 - 11, enemy.getY(), 30,
+						// 40));
+						enemyLaserShots.add(temp);
+
 					}
-					enemyWaveBoolean = false;
+					shotsFiredBoolean = false;
 				}
 
 				// methode auslagern
@@ -424,7 +538,8 @@ public class Main {
 				for (EnemyLaser enemyLaser : enemyLaserShots) {
 					enemyLaser.draw();
 					enemyLaser.update(delta);
-					enemyLaser.setDY(0.2);
+					// enemyLaser.setDY(0.2);
+					// enemyLaser.setDY(rng.nextDouble()/2+0.01);
 				}
 
 				leftMidRight = 1;
@@ -664,8 +779,6 @@ public class Main {
 		java.awt.Font awtFont2 = new java.awt.Font("Comic Sans MS",
 				java.awt.Font.BOLD, 50);
 		java.awt.Font awtFont3 = new java.awt.Font("Comic Sans MS",
-				java.awt.Font.BOLD, 50);
-		java.awt.Font awtfontGameOver = new java.awt.Font("Comic Sans MS",
 				java.awt.Font.BOLD, 50);
 		font = new UnicodeFont(awtFont);
 		font.getEffects().add(new ColorEffect(java.awt.Color.YELLOW));
