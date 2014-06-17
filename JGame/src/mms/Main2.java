@@ -1070,6 +1070,7 @@ public class Main2 {
 					homingMissiles.remove(homingM);
 					actualScore += 10;
 					collDetected2 = true;
+					
 					break outerLoop;
 				}
 			}

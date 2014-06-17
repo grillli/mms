@@ -12,6 +12,7 @@ public abstract class AbstractMoveableEntity extends AbstractEntity implements
 		this.dy = 0;
 	}
 
+	//x wird upgedatet durch Geschwindigkeit
 	@Override
 	public void update(int delta) {
 		this.x += delta * dx;

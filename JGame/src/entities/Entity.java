@@ -23,5 +23,6 @@ public interface Entity {
 
 	public double getWidtH();
 
+	//Collision-Detection
 	public boolean intersects(Entity other);
 }

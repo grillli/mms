@@ -15,6 +15,7 @@ public class Highscore {
 
 	private int highscore = 0;
 
+	//File wird geöffnet, bzw erstellt oder geladen
 	public Highscore() {
 		File file = new File("save.xml");
 		if (!file.exists()) {
@@ -25,6 +26,7 @@ public class Highscore {
 		}
 	}
 
+	//uebergebene highscore wird auf file geschrieben
 	public void save(File saveFile, int highscore) {
 		this.highscore = highscore;
 		Document document = new Document();
@@ -44,6 +46,7 @@ public class Highscore {
 
 	}
 
+	//xml-Datei wird ausgelesen
 	public int load(File loadFile) {
 		try {
 			SAXBuilder builder = new SAXBuilder();
@@ -63,6 +66,7 @@ public class Highscore {
 		return highscore;
 	}
 
+	//falls neue Highscore besser wird gespeichert
 	public void setHighscore(int highscoreNew) {
 		if (this.highscore < highscoreNew) {
 			save(new File("save.xml"), highscoreNew);

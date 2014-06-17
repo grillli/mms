@@ -60,6 +60,7 @@ public abstract class AbstractEntity implements Entity {
 		return width;
 	}
 
+	//Rectangle Überschneidung
 	@Override
 	public boolean intersects(Entity other) {
 		hitbox.setBounds((int) x, (int) y, (int) width, (int) height);
