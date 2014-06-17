@@ -2,11 +2,9 @@ package mms;
 
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glVertex2d;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -49,24 +47,6 @@ public class Gimmick extends AbstractMoveableEntity {
 
 	@Override
 	public void draw() {
-		star1.bind();
-		glLoadIdentity();
-		glTranslated(x, y, 0);
-		glBegin(GL_QUADS);
-		// glBegin(G_)
-		glTexCoord2f(0, 0);
-		glVertex2f(0, 0);
-		glTexCoord2f(1, 0);
-		glVertex2f((float) width, 0);
-		glTexCoord2f(1, 1);
-		glVertex2f((float) width, (float) height);
-		glTexCoord2f(0, 1);
-		glVertex2f(0, (float) height);
-		glEnd();
-		glLoadIdentity();
-	}
-
-	public void draw2() {
 		if (i < 8) {
 			star1.bind();
 		} else if (i < 16) {
@@ -83,7 +63,6 @@ public class Gimmick extends AbstractMoveableEntity {
 		glLoadIdentity();
 		glTranslated(x, y, 0);
 		glBegin(GL_QUADS);
-		// glBegin(G_)
 		glTexCoord2f(0, 0);
 		glVertex2f(0, 0);
 		glTexCoord2f(1, 0);

@@ -19,7 +19,6 @@ public class Highscore {
 		File file = new File("save.xml");
 		if (!file.exists()) {
 			this.highscore = 0;
-			System.out.println("sadas");
 			save(file, 0);
 		} else {
 			this.highscore = load(new File("save.xml"));

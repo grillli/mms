@@ -19,7 +19,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 import entities.AbstractMoveableEntity;
 
 public class Obstacle extends AbstractMoveableEntity {
-	
+
 	private Texture obst1 = null;
 	private Texture obst2 = null;
 	private Texture obst3 = null;
@@ -57,26 +57,7 @@ public class Obstacle extends AbstractMoveableEntity {
 		}
 	}
 
-	@Override
 	public void draw() {
-		obst1.bind();
-		glLoadIdentity();
-		glTranslated(x, y, 0);
-		glBegin(GL_QUADS);
-		// glBegin(G_)
-		glTexCoord2f(0, 0);
-		glVertex2f(0, 0);
-		glTexCoord2f(1, 0);
-		glVertex2f((float) width, 0);
-		glTexCoord2f(1, 1);
-		glVertex2f((float) width, (float) height);
-		glTexCoord2f(0, 1);
-		glVertex2f(0, (float) height);
-		glEnd();
-		glLoadIdentity();
-	}
-
-	public void draw2() {
 		if (i < 8) {
 			obst1.bind();
 		} else if (i < 16) {
@@ -91,9 +72,9 @@ public class Obstacle extends AbstractMoveableEntity {
 			obst6.bind();
 		} else if (i < 64) {
 			obst7.bind();
-		} else{
+		} else {
 			obst8.bind();
-	
+
 			if (i == 72) {
 				i = -1;
 			}
@@ -102,7 +83,6 @@ public class Obstacle extends AbstractMoveableEntity {
 		glLoadIdentity();
 		glTranslated(x, y, 0);
 		glBegin(GL_QUADS);
-		// glBegin(G_)
 		glTexCoord2f(0, 0);
 		glVertex2f(0, 0);
 		glTexCoord2f(1, 0);
@@ -113,7 +93,6 @@ public class Obstacle extends AbstractMoveableEntity {
 		glVertex2f(0, (float) height);
 		glEnd();
 		glLoadIdentity();
-
 	}
 
 }

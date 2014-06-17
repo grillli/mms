@@ -2,15 +2,11 @@ package mms;
 
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glTranslated;
-import static org.lwjgl.opengl.GL11.glVertex2d;
 import static org.lwjgl.opengl.GL11.glVertex2f;
-
-import static org.lwjgl.opengl.GL11.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,10 +34,10 @@ public class Explosion extends AbstractMoveableEntity {
 	private Texture expl13 = null;
 	private Texture expl14 = null;
 
-	private boolean check = true; 
-	public static final int countExplosion = 13; 
+	private boolean check = true;
+	public static final int countExplosion = 13;
 	private int i;
-	
+
 	public Explosion(double x, double y, double width, double height) {
 		super(x, y, width, height);
 		try {
@@ -73,7 +69,7 @@ public class Explosion extends AbstractMoveableEntity {
 					new File("res/explosion13.png")));
 			this.expl14 = TextureLoader.getTexture("PNG", new FileInputStream(
 					new File("res/explosion14.png")));
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -87,7 +83,6 @@ public class Explosion extends AbstractMoveableEntity {
 		glLoadIdentity();
 		glTranslated(x, y, 0);
 		glBegin(GL_QUADS);
-		// glBegin(G_)
 		glTexCoord2f(0, 0);
 		glVertex2f(0, 0);
 		glTexCoord2f(1, 0);
@@ -98,54 +93,45 @@ public class Explosion extends AbstractMoveableEntity {
 		glVertex2f(0, (float) height);
 		glEnd();
 		glLoadIdentity();
-
 	}
-	
-	
+
 	public void draw2() {
-		
-			if (i < 3) {
-				expl1.bind();
-			} else if (i < 6) {
-				expl2.bind();
-			} else if (i < 9) {
-				expl3.bind();
-			} else if (i < 12) {
-				expl4.bind();
-			} else if (i < 15) {
-				expl5.bind();
-			} else if (i <18) {
-				expl6.bind();
-			} else if (i < 21) {
-				expl7.bind();
-			} else if(i < 24){
-				expl8.bind();
-					
-			}else if (i < 26){
-				expl9.bind();
-			}else if(i < 28){
-				expl10.bind();
-			}else if(i < 30){
-				expl11.bind();
-			}else if(i< 32){
-				expl12.bind();
-			}else if (i < 34){
-				expl13.bind();
-			}else{
-				expl14.bind(); 
-				check = false; 
-
-			}
-			
-		
-		if(check){
+		if (i < 3) {
+			expl1.bind();
+		} else if (i < 6) {
+			expl2.bind();
+		} else if (i < 9) {
+			expl3.bind();
+		} else if (i < 12) {
+			expl4.bind();
+		} else if (i < 15) {
+			expl5.bind();
+		} else if (i < 18) {
+			expl6.bind();
+		} else if (i < 21) {
+			expl7.bind();
+		} else if (i < 24) {
+			expl8.bind();
+		} else if (i < 26) {
+			expl9.bind();
+		} else if (i < 28) {
+			expl10.bind();
+		} else if (i < 30) {
+			expl11.bind();
+		} else if (i < 32) {
+			expl12.bind();
+		} else if (i < 34) {
+			expl13.bind();
+		} else {
+			expl14.bind();
+			check = false;
+		}
+		if (check) {
 			i++;
-
 		}
 		glLoadIdentity();
 		glTranslated(x, y, 0);
 		glBegin(GL_QUADS);
-		// glBegin(G_)
 		glTexCoord2f(0, 0);
 		glVertex2f(0, 0);
 		glTexCoord2f(1, 0);
@@ -158,10 +144,8 @@ public class Explosion extends AbstractMoveableEntity {
 		glLoadIdentity();
 
 	}
-	
-	public void draw3() {
-		
 
+	public void draw3() {
 		if (i < 10) {
 			expl1.bind();
 		} else if (i < 20) {
@@ -172,48 +156,46 @@ public class Explosion extends AbstractMoveableEntity {
 			expl4.bind();
 		} else if (i < 50) {
 			expl5.bind();
-		} else if (i <60) {
+		} else if (i < 60) {
 			expl6.bind();
 		} else if (i < 70) {
 			expl7.bind();
-		} else if(i < 80){
+		} else if (i < 80) {
 			expl8.bind();
-				
-		}else if (i < 90){
+
+		} else if (i < 90) {
 			expl9.bind();
-		}else if(i < 100){
+		} else if (i < 100) {
 			expl10.bind();
-		}else if(i < 110){
+		} else if (i < 110) {
 			expl11.bind();
-		}else if(i< 120){
+		} else if (i < 120) {
 			expl12.bind();
-		}else if (i < 130){
+		} else if (i < 130) {
 			expl13.bind();
-		}else{
-			expl14.bind(); 
-			check = false; 
+		} else {
+			expl14.bind();
+			check = false;
 
 		}
-		
-	
-	if(check){
-		i++;
+
+		if (check) {
+			i++;
+
+		}
+		glLoadIdentity();
+		glTranslated(x, y, 0);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0, 0);
+		glVertex2f(0, 0);
+		glTexCoord2f(1, 0);
+		glVertex2f((float) width, 0);
+		glTexCoord2f(1, 1);
+		glVertex2f((float) width, (float) height);
+		glTexCoord2f(0, 1);
+		glVertex2f(0, (float) height);
+		glEnd();
+		glLoadIdentity();
 
 	}
-	glLoadIdentity();
-	glTranslated(x, y, 0);
-	glBegin(GL_QUADS);
-	// glBegin(G_)
-	glTexCoord2f(0, 0);
-	glVertex2f(0, 0);
-	glTexCoord2f(1, 0);
-	glVertex2f((float) width, 0);
-	glTexCoord2f(1, 1);
-	glVertex2f((float) width, (float) height);
-	glTexCoord2f(0, 1);
-	glVertex2f(0, (float) height);
-	glEnd();
-	glLoadIdentity();
-
-}
 }

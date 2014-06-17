@@ -58,29 +58,22 @@ public class Main2 {
 	private Player player;
 	private Explosion expl;
 
-	// Enemy enemy;
-	private Laser laser;
-	private EnemyLaser enemylaser;
 	private Boss boss;
 	private boolean bossThere = false;
-	// TrueTypeFont font;
 
 	private int backgroundY = 0;
-
-	private int leftMidRight = 1;
 
 	private Audio laserShotSound;
 	private Audio explosionSound;
 	private Audio gameOverSound1;
 	private Audio gameOverSound2;
+	private Audio bossDeathSound;
 	private Audio gimmickSound1;
-	private Audio gimmickSound2;
 	private Audio backGroundMusic;
 	private Audio victoryMusic;
 
-	private Audio audioEffect2;
-
 	private boolean playGameOverSound = true;
+	private boolean playBossDeathSound = true;
 
 	private static int PREF_DISPLAY_WIDTH = 1024;
 	private static int PREF_DISPLAY_HEIGHT = 720;
@@ -94,21 +87,20 @@ public class Main2 {
 	private int highscoreInt = 0;
 	private int bossLive = 50;
 
-	// private Background[] backgroundArray = new Background[2];
 	private Background thisBG;
 	private List<Background> backgroundLoop = new LinkedList<Background>();
-	private int x = 0;
 
 	private List<Laser> laserShots = new LinkedList<Laser>();
 	private List<Enemy> enemies = new LinkedList<Enemy>();
 	private List<Gimmick> gimmicks = new LinkedList<Gimmick>();
 	private List<Obstacle> obstacles = new LinkedList<Obstacle>();
-	private List<Explosion> explosions = new LinkedList<Explosion>();
 	private List<HomingMissile> homingMissiles = new LinkedList<HomingMissile>();
 	private List<EnemyLaser> enemyLaserShots = new LinkedList<EnemyLaser>();
 
 	private boolean running = false;
-	private boolean enemyLaserBoolean = false;
+	private boolean bossTime = false;
+	private boolean obstacleWaveBoolean = false;
+	private boolean gimmickWaveBoolean = false;
 	private boolean enemyWave1Boolean = false;
 	private boolean enemyWave2Boolean = false;
 	private boolean enemyWave3Boolean = false;
@@ -120,19 +112,20 @@ public class Main2 {
 	private boolean enemyWaveBetween3Boolean = false;
 	private boolean enemyWaveBetween4Boolean = false;
 	private boolean enemyWaveBetween5Boolean = false;
-
 	private boolean shotsFiredBoolean = false;
 
 	private boolean playerAlive = true;
 	private Live liveImage;
 	private int liveCounter = 3;
-	private int i = 20;
+	private int animationTime = 20;
 	private int counterGameOver = 100;
 	private Explosion explosionLast;
 	private Explosion explosionLast2 = null;
 	private Explosion explosionLast3 = null;
 
-	Enemy e1, e2, e3, e4, e5, e6, e7, e8, e9, e10;
+	private Enemy e1, e2, e3, e4, e5, e6, e7, e8, e9, e10;
+
+	private boolean victory = false;
 
 	public Main2() {
 		try {
@@ -144,84 +137,7 @@ public class Main2 {
 			e.printStackTrace();
 		}
 
-		player = new Player(PREF_DISPLAY_WIDTH / 2 - 50,
-				PREF_DISPLAY_HEIGHT - 100, 100, 100);
-		// Background background = new Background(0, -5000, 1800, 5000);
-		// Background background2 = new Background(0, -500, 1800, 5000);
-		// background.setDY(1); //0.05
-		// background2.setDY(.05);
-		// backgroundArray[0]=background;
-		// backgroundArray[1]=background2;
-		thisBG = new Background(0, -1000, 1800, 3000);
-		backgroundLoop.add(thisBG);
-
-		// Enemy enemy1 = new Enemy(10, 10, 50, 50, 0);
-		// enemy1.setDY(0.03);
-		// enemy1.setDX(0.05);
-		// enemies.add(enemy1);
-
-		Enemy enemy2 = new Enemy(800, 10, 80, 80, 1);
-		enemy2.setDY(0.01);
-		enemies.add(enemy2);
-
-		Enemy enemy3 = new Enemy(500, 100, 80, 80, 2);
-		enemy3.setDY(0.03);
-		enemies.add(enemy3);
-
-		Enemy enemy4 = new Enemy(430, 100, 80, 80, 3);
-		enemy4.setDY(0.09);
-		enemies.add(enemy4);
-
-		Enemy enemy5 = new Enemy(730, 100, 80, 80, 4);
-		enemy5.setDY(0.06);
-		enemies.add(enemy5);
-
-		Enemy enemy6 = new Enemy(650, 100, 80, 80, 5);
-		enemy6.setDY(0.05);
-		enemies.add(enemy6);
-
-		Gimmick gim1 = new Gimmick(50, 10, 50, 50);
-		gim1.setDY(0.3);
-		gimmicks.add(gim1);
-
-		Gimmick gim2 = new Gimmick(210, 10, 50, 50);
-		gim2.setDY(0.09);
-		gimmicks.add(gim2);
-
-		Gimmick gim3 = new Gimmick(550, 10, 50, 50);
-		gim3.setDY(0.02);
-		gimmicks.add(gim3);
-
-		Gimmick gim4 = new Gimmick(750, 10, 50, 50);
-		gim4.setDY(0.04);
-		gimmicks.add(gim4);
-
-		Obstacle obst1 = new Obstacle(680, 10, 70, 70);
-		obst1.setDY(0.04);
-		obstacles.add(obst1);
-
-		Obstacle obst2 = new Obstacle(480, 10, 70, 70);
-		obst2.setDY(0.02);
-		obstacles.add(obst2);
-
-		expl = new Explosion(player.getX(), player.getY(), 100, 100);
-
-		// homingMissiles.add(new HomingMissile(100, 100, 150, 150));
-		// homingMissiles.add(new HomingMissile(800, 100, 150, 150));
-		// homingMissiles.add(new HomingMissile(599, 100, 150, 150));
-
-		boss = new Boss(300, -1000, 800, 400);
-		boss.setDY(0.05);
-
-		// try{
-		// audioEffect = AudioLoader.getAudio("WAV",
-		// ResourceLoader.getResourceAsStream("res/background_musik.wav"));
-		// }catch(IOException e){
-		// e.printStackTrace();
-		// }
-
-		// laser = new Laser(player.getX()+player.getWidtH()/2 - 10/2,
-		// player.getY(), 10, 10);
+		setUpPlayerBgExplosionAndBoss();
 
 		setUpTimer();
 		setUpFonts();
@@ -229,12 +145,8 @@ public class Main2 {
 		Random rng = new Random();
 
 		backGroundMusic.playAsMusic(1f, 1f, false);
-		// backGroundMusic.
 
-		// methode
-		highscore = new Highscore();
-		// highscore.load(new File("save.xml"));
-		highscoreInt = highscore.getHighscore();
+		setUpHighscore();
 
 		liveImage = new Live(50, PREF_DISPLAY_HEIGHT - 50, 50, 50);
 
@@ -249,10 +161,10 @@ public class Main2 {
 
 		while (!Display.isCloseRequested()) {
 			delta = getDelta();
+			if (victory) {
+				delta = 0;
+			}
 			glClear(GL_COLOR_BUFFER_BIT);
-
-			// background.update(delta);
-			// background.draw();
 
 			if (!running) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
@@ -261,7 +173,6 @@ public class Main2 {
 					System.exit(0);
 				}
 				if (!playerAlive) {
-					// System.out.println("game over");
 					if (playGameOverSound) {
 						gameOverSound1.playAsMusic(1f, 1f, false);
 						gameOverSound2.playAsSoundEffect(1f, 1f, false);
@@ -274,97 +185,41 @@ public class Main2 {
 
 					if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
 						running = true;
-						TimerTask enemyWave1 = new TimerTask() {
-							public void run() {
-								enemyWave1Boolean = true;
-							}
-						};
-						TimerTask enemyWave2 = new TimerTask() {
-							public void run() {
-								enemyWave2Boolean = true;
-							}
-						};
-						TimerTask enemyWave3 = new TimerTask() {
-							public void run() {
-								enemyWave3Boolean = true;
-							}
-						};
-						TimerTask enemyWave4 = new TimerTask() {
-							public void run() {
-								enemyWave4Boolean = true;
-							}
-						};
-						TimerTask enemyWave5 = new TimerTask() {
-							public void run() {
-								enemyWave5Boolean = true;
-							}
-						};
-						TimerTask enemyWaveBetween1 = new TimerTask() {
-							public void run() {
-								enemyWaveBetween1Boolean = true;
-							}
-						};
-						TimerTask enemyWaveBetween2 = new TimerTask() {
-							public void run() {
-								enemyWaveBetween2Boolean = true;
-							}
-						};
-						TimerTask enemyWaveBetween3 = new TimerTask() {
-							public void run() {
-								enemyWaveBetween3Boolean = true;
-							}
-						};
-						TimerTask enemyWaveBetween4 = new TimerTask() {
-							public void run() {
-								enemyWaveBetween4Boolean = true;
-							}
-						};
-						TimerTask enemyWaveBetween5 = new TimerTask() {
-							public void run() {
-								enemyWaveBetween5Boolean = true;
-							}
-						};
-						TimerTask shotsFiredWave = new TimerTask() {
-							public void run() {
-								shotsFiredBoolean = true;
-							}
-						};
 
-						Timer TimerEnemyWaves = new Timer();
-						TimerEnemyWaves.schedule(enemyWave1, 5000, 50000);
-						TimerEnemyWaves.schedule(enemyWave2, 15000, 50000);
-						TimerEnemyWaves.schedule(enemyWave3, 25000, 50000);
-						TimerEnemyWaves.schedule(enemyWave4, 35000, 50000);
-						TimerEnemyWaves.schedule(enemyWave5, 45000, 50000);
+						createRndWaves();
 
-						TimerEnemyWaves.schedule(enemyWaveBetween1, 10000,
-								50000);
-						TimerEnemyWaves.schedule(enemyWaveBetween2, 20000,
-								50000);
-						TimerEnemyWaves.schedule(enemyWaveBetween3, 30000,
-								50000);
-						TimerEnemyWaves.schedule(enemyWaveBetween4, 40000,
-								50000);
-						TimerEnemyWaves.schedule(enemyWaveBetween5, 50000,
-								50000);
-
-						TimerEnemyWaves.schedule(shotsFiredWave, 6000, 4000);
-						// 2ter parameter is wann des startet, 3ter is wann des
-						// wiederholt wird
-						// wenn man nur zb enemyWave und 5000 angibt wird es net
-						// wiederholt sondern nur einmal nach 5000millisek, also
-						// 5sek gestartet
-
-						// try {
-						// Thread.sleep(2000);
-						// } catch (InterruptedException e) {
-						// e.printStackTrace();
-						// }
 					}
 				}
 			}
 
 			if (running) {
+
+				if (obstacleWaveBoolean) {
+
+					for (int i = 0; i <= 20; i = i + 5) {
+						if (!explosionColl) {
+							Obstacle tmp = new Obstacle(Math.random() * 900
+									+ (Math.random() * 100), 0, 70, 70);
+							tmp.setDY(Math.random() * 0.10);
+							obstacles.add(tmp);
+
+						}
+					}
+				}
+				obstacleWaveBoolean = false;
+
+				if (gimmickWaveBoolean) {
+					for (int i = 0; i <= 20; i = i + 5) {
+						if (!explosionColl) {
+							Gimmick tmp = new Gimmick(Math.random() * 900
+									+ (Math.random() * 100), 0, 50, 50);
+							tmp.setDY(Math.random() * 0.10);
+							gimmicks.add(tmp);
+						}
+
+					}
+					gimmickWaveBoolean = false;
+				}
 
 				if (enemyWave1Boolean) {
 					int xE = 50, yE = 0;
@@ -379,7 +234,7 @@ public class Main2 {
 					enemyWave1Boolean = false;
 				}
 				if (enemyWave2Boolean) {
-					int xE = 150, yE = 0;
+					int xE = 50, yE = 0;
 					int offset = 100;
 					for (int i = 0; i < 5; i++) {
 						if (!explosionColl) {
@@ -395,11 +250,7 @@ public class Main2 {
 					int offset = 0;
 					for (int i = 0; i < 5; i++) {
 						if (!explosionColl) {
-							Enemy temp = new Enemy(xE, yE + offset, 80, 80, 4);
-							if (i == 1 || i == 3) {
-								temp.setDY(0.1);
-							}
-							enemies.add(temp);
+							enemies.add(new Enemy(xE, yE + offset, 80, 80, 3));
 							if (i % 2 == 0) {
 								offset -= 100;
 							} else {
@@ -499,42 +350,17 @@ public class Main2 {
 				if (shotsFiredBoolean) {
 					for (Enemy enemy : enemies) {
 						EnemyLaser temp = new EnemyLaser(enemy.getX()
-								+ enemy.getWidtH() / 2 - 11, enemy.getY(), 30,
+								+ enemy.getWidtH() / 2 - 20, enemy.getY(), 30,
 								40);
 						temp.setDY(rng.nextDouble() / 2 + 0.08);
-						// enemyLaserShots.add(new EnemyLaser(enemy.getX()
-						// + enemy.getWidtH() / 2 - 11, enemy.getY(), 30,
-						// 40));
 						enemyLaserShots.add(temp);
 
 					}
 					shotsFiredBoolean = false;
 				}
 
-				// methode auslagern
-				if (boss.getY() > 0) {
-					if (!bossThere) {
-						boss.setDY(0);
-						boss.setDX(-0.1);
-						if (!explosionColl) {
-							homingMissiles.add(new HomingMissile(boss.getX()
-									+ boss.getWidtH() / 4, boss.getY()
-									+ boss.getHeight() / 4, 150, 150));
-							homingMissiles.add(new HomingMissile(boss.getX()
-									+ boss.getWidtH() / 4 + 135, boss.getY()
-									+ boss.getHeight() / 4, 150, 150));
-						}
-
-						bossThere = true;
-					}
-
-					if (boss.getX() < 0) {
-						boss.setDX(0.1);
-					} else if (boss.getX() > 600) {
-						boss.setDX(-0.1);
-					}
-
-				}
+				// TODO Auto-generated catch block
+				bossMovement();
 
 				for (Background bg : backgroundLoop) {
 					bg.draw();
@@ -542,36 +368,16 @@ public class Main2 {
 					bg.setDY(0.1 + turbo / 100 - 0.06);
 				}
 
-				// enemy.draw();
-				// enemy.update(delta);
 				if (!bossDeath) {
-					boss.draw();
-					boss.update(delta);
+
+					if (bossTime) {
+						boss.draw();
+						boss.update(delta);
+					}
 
 				} else {
-					boss.setDX(0);
-					boss.setDY(0);
-					expl.setX(boss.getX());
-					expl.setY(boss.getY());
-					expl.setHeight(600);
-					expl.setWidth(600);
-
-					expl.draw3();
-					expl.update(delta);
-
-					TimerTask wait = new TimerTask() {
-						public void run() {
-
-							boss.setY(-1000);
-							boss.setX(-1000);
-						}
-					};
-					Timer TimerWaitSet = new Timer();
-					TimerWaitSet.schedule(wait, 1000);
-
-					expl.setHeight(100);
-					expl.setWidth(100);
-
+					// TODO
+					bossDeath();
 				}
 
 				for (HomingMissile hm : homingMissiles) {
@@ -589,12 +395,12 @@ public class Main2 {
 				}
 
 				for (Gimmick gimmick : gimmicks) {
-					gimmick.draw2();
+					gimmick.draw();
 					gimmick.update(delta);
 				}
 
 				for (Obstacle obstacle : obstacles) {
-					obstacle.draw2();
+					obstacle.draw();
 					obstacle.update(delta);
 				}
 
@@ -611,8 +417,8 @@ public class Main2 {
 					// if(i==19){
 					// explosionSound.playAsSoundEffect(1f, 1f, false);
 					// }
-					i--;
-					if (i == 0) {
+					animationTime--;
+					if (animationTime == 0) {
 
 						explosionColl = false;
 					}
@@ -633,7 +439,7 @@ public class Main2 {
 				backgroundY = (int) thisBG.getY();
 				// System.out.println(backgroundY);
 
-				if (backgroundY > x) {
+				if (backgroundY > 0) {
 					// backgroundLoop.add(new Background(0, -1000, 1800, 3000));
 
 					thisBG = new Background(0, -2200, 1800, 3000);
@@ -660,11 +466,17 @@ public class Main2 {
 					// enemyLaser.setDY(rng.nextDouble()/2+0.01);
 				}
 
-				leftMidRight = 1;
+				// leftMidRight = 1;
 				input();
 				input2();
-				checkLaserOutOfScreen();
-				checkEnemyLaserOutOfScreen();
+
+				checkObjectsOutOfScreen();
+				// checkLaserOutOfScreen();
+				// checkEnemyLaserOutOfScreen();
+				// checkEnemyOutOfScreen();
+				// checkObstacleOutOfScreen();
+				// checkGimmickOutOfScreen();
+				// checkHomingMissileOutOfScreen();
 				checkColl();
 
 				fonts();
@@ -709,7 +521,9 @@ public class Main2 {
 				if (counterGameOver == 0) {
 					running = false;
 				}
-
+				if (victory) {
+					drawVictoryScreen();
+				}
 			}
 			Display.update();
 			Display.sync(60);
@@ -719,11 +533,168 @@ public class Main2 {
 		System.exit(0);
 	}
 
-	// private void laserMovement(Laser laser) {
-	// laser.setX(player.getX());
-	// laser.setY(player.getY());
-	//
-	// }
+	private void bossDeath() {
+		if (playBossDeathSound) {
+
+			bossDeathSound.playAsSoundEffect(1f, 1f, false);
+			victoryMusic.playAsMusic(1f, 1f, false);
+			victory = true;
+
+			playBossDeathSound = false;
+		}
+		boss.setDX(0);
+		boss.setDY(0);
+		expl.setX(boss.getX());
+		expl.setY(boss.getY());
+		expl.setHeight(600);
+		expl.setWidth(600);
+
+		expl.draw3();
+		expl.update(delta);
+
+		TimerTask wait = new TimerTask() {
+			public void run() {
+
+				boss.setY(-1000);
+				boss.setX(-1000);
+			}
+		};
+		Timer TimerWaitSet = new Timer();
+		TimerWaitSet.schedule(wait, 1500);
+
+		expl.setHeight(100);
+		expl.setWidth(100);
+
+	}
+
+	private void bossMovement() {
+		if (boss.getY() > 0) {
+			if (!bossThere) {
+				boss.setDY(0);
+				boss.setDX(-0.1);
+				if (!explosionColl) {
+					homingMissiles.add(new HomingMissile(boss.getX()
+							+ boss.getWidtH() / 4, boss.getY()
+							+ boss.getHeight() / 4, 150, 150));
+					homingMissiles.add(new HomingMissile(boss.getX()
+							+ boss.getWidtH() / 4 + 135, boss.getY()
+							+ boss.getHeight() / 4, 150, 150));
+				}
+
+				bossThere = true;
+			}
+
+			if (boss.getX() < 0) {
+				boss.setDX(0.1);
+			} else if (boss.getX() > 600) {
+				boss.setDX(-0.1);
+			}
+
+		}
+	}
+
+	private void createRndWaves() {
+		TimerTask gimmickWave = new TimerTask() {
+			public void run() {
+				gimmickWaveBoolean = true;
+			}
+		};
+		TimerTask osbtacleWave = new TimerTask() {
+			public void run() {
+				obstacleWaveBoolean = true;
+			}
+		};
+		TimerTask enemyWave1 = new TimerTask() {
+			public void run() {
+				enemyWave1Boolean = true;
+			}
+		};
+		TimerTask enemyWave2 = new TimerTask() {
+			public void run() {
+				enemyWave2Boolean = true;
+			}
+		};
+		TimerTask enemyWave3 = new TimerTask() {
+			public void run() {
+				enemyWave3Boolean = true;
+			}
+		};
+		TimerTask enemyWave4 = new TimerTask() {
+			public void run() {
+				enemyWave4Boolean = true;
+			}
+		};
+		TimerTask enemyWave5 = new TimerTask() {
+			public void run() {
+				bossTime = true;
+				enemyWave5Boolean = true;
+			}
+		};
+		TimerTask enemyWaveBetween1 = new TimerTask() {
+			public void run() {
+				enemyWaveBetween1Boolean = true;
+			}
+		};
+		TimerTask enemyWaveBetween2 = new TimerTask() {
+			public void run() {
+				enemyWaveBetween2Boolean = true;
+			}
+		};
+		TimerTask enemyWaveBetween3 = new TimerTask() {
+			public void run() {
+				enemyWaveBetween3Boolean = true;
+			}
+		};
+		TimerTask enemyWaveBetween4 = new TimerTask() {
+			public void run() {
+				enemyWaveBetween4Boolean = true;
+			}
+		};
+		TimerTask enemyWaveBetween5 = new TimerTask() {
+			public void run() {
+				enemyWaveBetween5Boolean = true;
+			}
+		};
+		TimerTask shotsFiredWave = new TimerTask() {
+			public void run() {
+				shotsFiredBoolean = true;
+			}
+		};
+		Timer TimerEnemyWaves = new Timer();
+		TimerEnemyWaves.schedule(enemyWave1, 5000, 50000);
+		TimerEnemyWaves.schedule(enemyWave2, 15000, 50000);
+		TimerEnemyWaves.schedule(enemyWave3, 25000, 50000);
+		TimerEnemyWaves.schedule(enemyWave4, 35000, 50000);
+		TimerEnemyWaves.schedule(enemyWave5, 45000, 50000);
+
+		TimerEnemyWaves.schedule(enemyWaveBetween1, 10000, 50000);
+		TimerEnemyWaves.schedule(enemyWaveBetween2, 20000, 50000);
+		TimerEnemyWaves.schedule(enemyWaveBetween3, 30000, 50000);
+		TimerEnemyWaves.schedule(enemyWaveBetween4, 40000, 50000);
+		TimerEnemyWaves.schedule(enemyWaveBetween5, 50000, 50000);
+		TimerEnemyWaves.schedule(shotsFiredWave, 6000, 4000);
+
+		Timer ObstacleWaves = new Timer();
+		ObstacleWaves.schedule(osbtacleWave, 0, 20000);
+
+		Timer GimmickWaves = new Timer();
+		GimmickWaves.schedule(gimmickWave, 0, 20000);
+	}
+
+	private void setUpHighscore() {
+		highscore = new Highscore();
+		highscoreInt = highscore.getHighscore();
+	}
+
+	private void setUpPlayerBgExplosionAndBoss() {
+		player = new Player(PREF_DISPLAY_WIDTH / 2 - 50,
+				PREF_DISPLAY_HEIGHT - 100, 100, 100);
+		thisBG = new Background(0, -1000, 1800, 3000);
+		backgroundLoop.add(thisBG);
+		expl = new Explosion(player.getX(), player.getY(), 100, 100);
+		boss = new Boss(300, -1000, 800, 400);
+		boss.setDY(0.05);
+	}
 
 	private void setUpSounds() {
 		try {
@@ -737,12 +708,13 @@ public class Main2 {
 					ResourceLoader.getResourceAsStream("res/GameOver2.wav"));
 			gimmickSound1 = AudioLoader.getAudio("WAV",
 					ResourceLoader.getResourceAsStream("res/Powerup11.wav"));
-			gimmickSound2 = AudioLoader.getAudio("WAV",
-					ResourceLoader.getResourceAsStream("res/speed.wav"));
 			backGroundMusic = AudioLoader.getAudio("WAV", ResourceLoader
 					.getResourceAsStream("res/JumpUpAndBounceDown.wav"));
 			victoryMusic = AudioLoader.getAudio("WAV",
 					ResourceLoader.getResourceAsStream("res/victory.wav"));
+			bossDeathSound = AudioLoader
+					.getAudio("WAV", ResourceLoader
+							.getResourceAsStream("res/bossExplosion.wav"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -759,15 +731,93 @@ public class Main2 {
 
 	private void checkEnemyLaserOutOfScreen() {
 		for (EnemyLaser enemyLaser : enemyLaserShots) {
-			if (enemyLaser.getY() > 720) {
+			if (enemyLaser.getY() > PREF_DISPLAY_WIDTH) {
 				laserShots.remove(enemyLaser);
 				break;
 			}
 		}
 	}
 
+	private void checkEnemyOutOfScreen() {
+
+		boolean check = false;
+		outerLoop: for (Enemy enemy : enemies) {
+			if (enemy.getY() > PREF_DISPLAY_WIDTH) {
+				enemies.remove(enemy);
+				checkEnemyOutOfScreen();
+				check = true;
+				break outerLoop;
+			}
+		}
+
+		if (check) {
+			checkEnemyOutOfScreen();
+		}
+	}
+
+	private void checkObstacleOutOfScreen() {
+
+		boolean check = false;
+		outerLoop: for (Obstacle obstacle : obstacles) {
+
+			if (obstacle.getY() > PREF_DISPLAY_WIDTH) {
+				obstacles.remove(obstacle);
+				checkObstacleOutOfScreen();
+				check = true;
+				break outerLoop;
+			}
+		}
+
+		if (check) {
+			checkObstacleOutOfScreen();
+		}
+	}
+
+	private void checkGimmickOutOfScreen() {
+
+		boolean check = false;
+		outerLoop: for (Gimmick gimmick : gimmicks) {
+
+			if (gimmick.getY() > PREF_DISPLAY_WIDTH) {
+				gimmicks.remove(gimmick);
+				checkGimmickOutOfScreen();
+				check = true;
+				break outerLoop;
+			}
+		}
+
+		if (check) {
+			checkGimmickOutOfScreen();
+		}
+
+	}
+
+	private void checkHomingMissileOutOfScreen() {
+		for (HomingMissile homingM : homingMissiles) {
+			if (homingM.getY() > PREF_DISPLAY_WIDTH
+					|| homingM.getX() > PREF_DISPLAY_HEIGHT
+					|| homingM.getY() < 0) {
+				homingMissiles.remove(homingM);
+			}
+		}
+
+	}
+
+	private void checkObjectsOutOfScreen() {
+		checkLaserOutOfScreen();
+		checkEnemyLaserOutOfScreen();
+		checkEnemyOutOfScreen();
+		checkObstacleOutOfScreen();
+		checkGimmickOutOfScreen();
+		checkHomingMissileOutOfScreen();
+	}
+
 	private void setUpTimer() {
 		lastFrame = getTime();
+	}
+
+	private long getTime() {
+		return (Sys.getTime() * 1000 / Sys.getTimerResolution());
 	}
 
 	private int getDelta() {
@@ -775,10 +825,6 @@ public class Main2 {
 		int delta = (int) (currentTime - lastFrame);
 		lastFrame = getTime();
 		return delta;
-	}
-
-	private long getTime() {
-		return (Sys.getTime() * 1000 / Sys.getTimerResolution());
 	}
 
 	private void input() {
@@ -800,7 +846,7 @@ public class Main2 {
 
 		// if (Keyboard.getEventKey() == Keyboard.KEY_W
 		// && Keyboard.getEventKeyState()) {
-		if (!explosionColl && Keyboard.isKeyDown(Keyboard.KEY_W)) {
+		if (!explosionColl && !victory && Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			if (gimColl) {
 				steps++;
 			}
@@ -814,7 +860,7 @@ public class Main2 {
 				player.setY(player.getY() - turbo);
 			}
 		}
-		if (!explosionColl && Keyboard.isKeyDown(Keyboard.KEY_S)) {
+		if (!explosionColl && !victory && Keyboard.isKeyDown(Keyboard.KEY_S)) {
 			if (gimColl) {
 				steps++;
 			}
@@ -825,12 +871,12 @@ public class Main2 {
 				gimColl = false;
 			}
 
-			if (player.getY() < 635) {
+			if (player.getY() < PREF_DISPLAY_HEIGHT - player.getHeight() * 0.85) {
 				player.setY(player.getY() + turbo);
 			}
 
 		}
-		if (!explosionColl && Keyboard.isKeyDown(Keyboard.KEY_A)) {
+		if (!explosionColl && !victory && Keyboard.isKeyDown(Keyboard.KEY_A)) {
 			if (gimColl) {
 				steps++;
 			}
@@ -842,11 +888,11 @@ public class Main2 {
 			}
 			if (!(player.getX() < 0)) {
 				player.setX(player.getX() - turbo);
-				leftMidRight = 0;
+				// leftMidRight = 0;
 			}
 
 		}
-		if (!explosionColl && Keyboard.isKeyDown(Keyboard.KEY_D)) {
+		if (!explosionColl && !victory && Keyboard.isKeyDown(Keyboard.KEY_D)) {
 			if (gimColl) {
 				steps++;
 			}
@@ -855,9 +901,9 @@ public class Main2 {
 				steps = 0;
 				gimColl = false;
 			}
-			if (player.getX() < 960) {
+			if (player.getX() < PREF_DISPLAY_WIDTH - player.getWidtH() * 0.65) {
 				player.setX(player.getX() + turbo);
-				leftMidRight = 2;
+				// leftMidRight = 2;
 			}
 		}
 		// if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && Keyboard.next()) {
@@ -875,7 +921,8 @@ public class Main2 {
 
 	private void input2() {
 		while (Keyboard.next()) {
-			if (!explosionColl && Keyboard.getEventKey() == Keyboard.KEY_SPACE
+			if (!explosionColl && !victory
+					&& Keyboard.getEventKey() == Keyboard.KEY_SPACE
 					&& Keyboard.getEventKeyState()) {
 				laserShots.add(new Laser(player.getX() + player.getWidtH() / 2
 						- 23, player.getY(), 10, 20));
@@ -884,7 +931,8 @@ public class Main2 {
 			if (!explosionColl && Keyboard.getEventKey() == Keyboard.KEY_P
 					&& Keyboard.getEventKeyState()) {
 				liveCounter++;
-				victoryMusic.playAsMusic(1f, 1f, false);
+				// victoryMusic.playAsMusic(1f, 1f, false);
+				// victory = true;
 			}
 			SoundStore.get().poll(0);
 		}
@@ -945,6 +993,17 @@ public class Main2 {
 				"Highscore: " + highscore.getHighscore());
 	}
 
+	private void drawVictoryScreen() {
+		highscore.setHighscore(actualScore);
+		fontGameOver.drawString(PREF_DISPLAY_WIDTH / 6,
+				PREF_DISPLAY_HEIGHT / 2 - 100, "YOU WON!!");
+		fontGameOver.drawString(PREF_DISPLAY_WIDTH / 6,
+				PREF_DISPLAY_HEIGHT / 2, "Your Score: " + actualScore);
+		fontGameOver.drawString(PREF_DISPLAY_WIDTH / 6,
+				PREF_DISPLAY_HEIGHT / 2 + 100,
+				"Highscore: " + highscore.getHighscore());
+	}
+
 	private void checkColl() {
 		boolean collDetected = false;
 		outerLoop: for (Enemy enemy : enemies) {
@@ -954,6 +1013,7 @@ public class Main2 {
 					expl.setX(enemy.getX());
 					expl.setY(enemy.getY());
 					expl.draw();
+					expl.update(delta);
 
 					laserShots.remove(laser);
 					enemies.remove(enemy);
@@ -974,14 +1034,13 @@ public class Main2 {
 					expl.setX(laser.getX() - 50);
 					expl.setY(laser.getY() - 50);
 					expl.draw();
+					expl.update(delta);
+
 					explosionSound.playAsSoundEffect(1f, 1f, false);
 
 				}
 
 				laserShots.remove(laser);
-				if (bossLive == 1) {
-					explosionSound.playAsSoundEffect(1f, 1f, false);
-				}
 				bossLive--;
 				collDetected = true;
 				break;
@@ -998,6 +1057,8 @@ public class Main2 {
 					expl.setX(homingM.getX());
 					expl.setY(homingM.getY());
 					expl.draw();
+					expl.update(delta);
+
 					laserShots.remove(laser);
 					homingMissiles.remove(homingM);
 					actualScore += 10;
@@ -1010,24 +1071,35 @@ public class Main2 {
 			checkColl();
 		}
 
-		for (Gimmick gimmick : gimmicks) {
+		boolean collDetected6 = false;
+		outLoop: for (Gimmick gimmick : gimmicks) {
 			if (player.intersects(gimmick)) {
 				gimColl = true;
 				gimmicks.remove(gimmick);
 				turbo = 10;
 				gimmickSound1.playAsSoundEffect(1f, 1f, false);
 				// gimmickSound2.playAsSoundEffect(1f, 1f, false);
-				break;
+				collDetected6 = true;
+				break outLoop;
 			}
 		}
+		if (collDetected6) {
+			checkColl();
+		}
 
-		for (Obstacle obstacle : obstacles) {
+		boolean collDetected5 = false;
+		outerLoop: for (Obstacle obstacle : obstacles) {
 			if (player.intersects(obstacle)) {
 				obstacles.remove(obstacle);
 				explosionColl = true;
+				collDetected5 = true;
 				explosionSound.playAsSoundEffect(1f, 1f, false);
 				decreaseLive();
+				break outerLoop;
 			}
+		}
+		if (collDetected5) {
+			checkColl();
 		}
 
 		// die schleife ist schneller als die draw2 methode, daher werden die
@@ -1038,11 +1110,12 @@ public class Main2 {
 				expl.setX(player.getX());
 				expl.setY(player.getY());
 				expl.draw2();
+				expl.update(delta);
 
 				enemies.remove(enemy);
 
 				explosionColl = true;
-				i = 20;
+				animationTime = 20;
 				collDetected4 = true;
 				explosionSound.playAsSoundEffect(1f, 1f, false);
 				decreaseLive();
@@ -1068,6 +1141,8 @@ public class Main2 {
 			expl.setX(player.getX());
 			expl.setY(player.getY());
 			expl.draw2();
+			expl.update(delta);
+
 			// }
 			explosionColl = true;
 			explosionSound.playAsSoundEffect(1f, 1f, false);
@@ -1084,6 +1159,7 @@ public class Main2 {
 				expl.setX(player.getX());
 				expl.setY(player.getY());
 				expl.draw2();
+				expl.update(delta);
 
 				// }
 				enemyLaserShots.remove(enemyLaser);
@@ -1103,7 +1179,7 @@ public class Main2 {
 
 	private void decreaseLive() {
 		liveCounter--;
-		i = 20;
+		animationTime = 20;
 	}
 
 	private void checkAlive() {

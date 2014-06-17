@@ -2,11 +2,9 @@ package mms;
 
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glVertex2d;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -52,7 +50,7 @@ public class Enemy extends AbstractMoveableEntity {
 				this.texture = TextureLoader.getTexture("PNG",
 						new FileInputStream(new File("res/enemy5.png")));
 				break;
-				
+
 			}
 
 		} catch (FileNotFoundException e) {
@@ -68,7 +66,6 @@ public class Enemy extends AbstractMoveableEntity {
 		glLoadIdentity();
 		glTranslated(x, y, 0);
 		glBegin(GL_QUADS);
-		// glBegin(G_)
 		glTexCoord2f(0, 0);
 		glVertex2f(0, 0);
 		glTexCoord2f(1, 0);
@@ -79,13 +76,5 @@ public class Enemy extends AbstractMoveableEntity {
 		glVertex2f(0, (float) height);
 		glEnd();
 		glLoadIdentity();
-
-		// glColor3f(1, 0, 0);
-		// glBegin(GL_QUADS);
-		// glVertex2d(x, y);
-		// glVertex2d(x + width, y);
-		// glVertex2d(x + width, y + height);
-		// glVertex2d(x, y + height);
-		// glEnd();
 	}
 }

@@ -1,16 +1,6 @@
 package mms;
 
-
 import static org.lwjgl.opengl.GL11.*;
-
-
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glVertex2d;
-import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,13 +11,14 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import entities.AbstractMoveableEntity;
-	
-public class HomingMissile extends AbstractMoveableEntity{
-	private Texture texture = null; 
-	
+import entities.Entity;
+
+public class HomingMissile extends AbstractMoveableEntity {
+	private Texture texture = null;
+
 	public HomingMissile(double x, double y, double width, double height) {
 		super(x, y, width, height);
-		try{
+		try {
 			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(
 					new File("res/homingMissile.png")));
 		} catch (FileNotFoundException e) {
@@ -36,6 +27,15 @@ public class HomingMissile extends AbstractMoveableEntity{
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public boolean intersects(Entity other) {
+		hitbox.setBounds((int) ((x < other.getX()) ? x + width / 2 : x - width
+				/ 2), (int) (y + height / 5), (int) width, (int) height);
+		return hitbox.intersects(other.getX(), other.getY(), other.getWidtH(),
+				other.getHeight());
+	}
+
 	@Override
 	public void draw() {
 		texture.bind();
@@ -45,14 +45,13 @@ public class HomingMissile extends AbstractMoveableEntity{
 		glTexCoord2f(0, 0);
 		glVertex2f(0, 0);
 		glTexCoord2f(1, 0);
-		glVertex2f((float)width, 0);
+		glVertex2f((float) width, 0);
 		glTexCoord2f(1, 1);
-		glVertex2f((float)width, (float)height);
+		glVertex2f((float) width, (float) height);
 		glTexCoord2f(0, 1);
-		glVertex2f(0, (float)height);
+		glVertex2f(0, (float) height);
 		glEnd();
-		glLoadIdentity();	
+		glLoadIdentity();
 	}
 
 }
-
