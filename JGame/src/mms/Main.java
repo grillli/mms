@@ -1,23 +1,3 @@
-//////////////////////////////////////////////////////////
-//
-// boolean alive;
-// if(!alive) GameOverScreen.draw (Klasse GameOverScreen)
-// alle anderen inputs auer ESC deaktiviern + sounds;
-//
-// abfragen if(player.getX<0||player.getX>bildschirmbreite und Y dann geht A bzw D tasten nimchtmehr
-// + W und S fr getY
-//
-// laserabfrage, damit nicht unendlich laser geschossen werden, wenn laser.getY>bildschirmhhe, dann lasershots.delete(laser)
-//
-// Hautpmen bzw. Startmen fehlt auch noch
-//
-// Highscore mach ich noch
-//
-// und fr des komplette level brauchen wir dann zb noch einen Time-Manager der nach einer bestimmten Zeit einen Gegner erstellt
-//
-// wir knnen auch noch den speedBoost vom Stern auf den Hintergrund hinzufgen, dass es aussieht als ob man schneller fliegt
-/////////////////////////
-
 package mms;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -111,6 +91,8 @@ public class Main {
 	private boolean enemyWaveBetween4Boolean = false;
 	private boolean enemyWaveBetween5Boolean = false;
 	private boolean shotsFiredBoolean = false;
+
+	private boolean spawnHomingMissiles = false;
 
 	private boolean playerAlive = true;
 	private Live liveImage;
@@ -412,7 +394,7 @@ public class Main {
 
 				} else {
 
-//					 drawPlayerExplosion();
+					// drawPlayerExplosion();
 					expl.setX(player.getX());
 					expl.setY(player.getY());
 					expl.draw2();
@@ -541,8 +523,14 @@ public class Main {
 				boss.setX(-1000);
 			}
 		};
+		TimerTask spawnHomingMissiles = new TimerTask() {
+			public void run() {
+				// spawnHomingMissiles = true;
+			}
+		};
 		Timer TimerWaitSet = new Timer();
 		TimerWaitSet.schedule(wait, 1500);
+		TimerWaitSet.schedule(spawnHomingMissiles, 3000, 3000);
 
 		expl.setHeight(100);
 		expl.setWidth(100);
@@ -816,7 +804,6 @@ public class Main {
 			AL.destroy();
 			System.exit(0);
 		}
-
 		if (!explosionColl && !victory && Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			if (gimColl) {
 				steps++;
@@ -1098,7 +1085,8 @@ public class Main {
 			explosionColl = true;
 			explosionSound.playAsSoundEffect(1f, 1f, false);
 			decreaseLive();
-
+			player.setX(PREF_DISPLAY_WIDTH / 2 - 50);
+			player.setY(PREF_DISPLAY_HEIGHT - 100);
 		}
 
 		boolean collDetected3 = false;

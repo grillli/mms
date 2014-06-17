@@ -124,11 +124,9 @@ public class Explosion extends AbstractMoveableEntity {
 			expl13.bind();
 		} else {
 			expl14.bind();
-			check = false;
+			i = -1;
 		}
-		if (check) {
-			i++;
-		}
+		i++;
 		glLoadIdentity();
 		glTranslated(x, y, 0);
 		glBegin(GL_QUADS);
